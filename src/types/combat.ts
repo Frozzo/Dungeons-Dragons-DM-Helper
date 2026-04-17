@@ -1,6 +1,8 @@
 import type { Enemy, Player } from "./entity";
+import type { Locale } from "../i18n/uiText";
 
 export interface AppState {
+  locale: Locale;
   sessionName: string;
   round: number;
   turnIndex: number;
@@ -9,6 +11,7 @@ export interface AppState {
 }
 
 export type AppAction =
+  | { type: "session/setLocale"; payload: Locale }
   | { type: "session/setName"; payload: string }
   | { type: "combat/resetRound" }
   | { type: "combat/endRound" }

@@ -7,9 +7,11 @@ import { QuickRulesPanel } from "./components/rules/QuickRulesPanel";
 import { SoundboardPanel } from "./components/soundboard/SoundboardPanel";
 import { appReducer, initialState } from "./state/appStore";
 import { sortInitiative } from "./logic/initiative";
+import { UI_TEXT } from "./i18n/uiText";
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const uiText = UI_TEXT[state.locale];
 
   const initiativeOrder = useMemo(
     () => sortInitiative(state.players, state.enemies),
@@ -19,7 +21,12 @@ export default function App() {
   return (
     <div className="app-shell">
       <TopBar
+        locale={state.locale}
+        uiText={uiText}
         sessionName={state.sessionName}
+        onLocaleChange={(value) =>
+          dispatch({ type: "session/setLocale", payload: value })
+        }
         onSessionNameChange={(value) =>
           dispatch({ type: "session/setName", payload: value })
         }
@@ -29,6 +36,7 @@ export default function App() {
       <main className="desktop-grid">
         <section className="panel-column panel-column-left">
           <PlayersPanel
+            uiText={uiText}
             players={state.players}
             onAddPlayer={(name) =>
               dispatch({ type: "players/add", payload: { name } })
@@ -41,6 +49,7 @@ export default function App() {
 
         <section className="panel-column panel-column-center">
           <CombatBoard
+            uiText={uiText}
             round={state.round}
             turnIndex={state.turnIndex}
             order={initiativeOrder}
@@ -48,11 +57,12 @@ export default function App() {
             onPrevTurn={() => dispatch({ type: "combat/prevTurn", payload: initiativeOrder.length })}
             onEndRound={() => dispatch({ type: "combat/endRound" })}
           />
-          <QuickRulesPanel />
+          <QuickRulesPanel uiText={uiText} />
         </section>
 
         <section className="panel-column panel-column-right">
           <EnemiesPanel
+            uiText={uiText}
             enemies={state.enemies}
             onAddEnemy={(name) =>
               dispatch({ type: "enemies/add", payload: { name } })
@@ -61,7 +71,7 @@ export default function App() {
               dispatch({ type: "enemies/update", payload: { id, patch } })
             }
           />
-          <SoundboardPanel />
+          <SoundboardPanel uiText={uiText} />
         </section>
       </main>
     </div>

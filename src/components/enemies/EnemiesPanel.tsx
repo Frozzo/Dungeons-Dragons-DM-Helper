@@ -1,12 +1,15 @@
 import type { Enemy } from "../../types/entity";
+import type { UiText } from "../../i18n/uiText";
 
 interface EnemiesPanelProps {
+  uiText: UiText;
   enemies: Enemy[];
   onAddEnemy: (name: string) => void;
   onUpdateEnemy: (id: string, patch: Partial<Enemy>) => void;
 }
 
 export function EnemiesPanel({
+  uiText,
   enemies,
   onAddEnemy,
   onUpdateEnemy
@@ -14,9 +17,13 @@ export function EnemiesPanel({
   return (
     <div className="panel enemies-panel">
       <div className="panel-header">
-        <h2>Enemies</h2>
-        <button className="btn" type="button" onClick={() => onAddEnemy(`Enemy ${enemies.length + 1}`)}>
-          + Add
+        <h2>{uiText.enemies.title}</h2>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => onAddEnemy(`${uiText.enemies.defaultNamePrefix} ${enemies.length + 1}`)}
+        >
+          {uiText.enemies.add}
         </button>
       </div>
 
@@ -27,12 +34,12 @@ export function EnemiesPanel({
               className="input title-input"
               value={enemy.name}
               onChange={(event) => onUpdateEnemy(enemy.id, { name: event.target.value })}
-              aria-label="Enemy name"
+              aria-label={uiText.enemies.nameAriaLabel}
             />
 
             <div className="grid-2">
               <label>
-                Initiative
+                {uiText.enemies.initiative}
                 <input
                   className="input"
                   type="number"
@@ -43,7 +50,7 @@ export function EnemiesPanel({
                 />
               </label>
               <label>
-                Armor Class
+                {uiText.enemies.armorClass}
                 <input
                   className="input"
                   type="number"
@@ -57,7 +64,7 @@ export function EnemiesPanel({
 
             <div className="grid-2">
               <label>
-                HP Current
+                {uiText.enemies.hpCurrent}
                 <input
                   className="input"
                   type="number"
@@ -68,7 +75,7 @@ export function EnemiesPanel({
                 />
               </label>
               <label>
-                HP Max
+                {uiText.enemies.hpMax}
                 <input
                   className="input"
                   type="number"
@@ -88,15 +95,15 @@ export function EnemiesPanel({
                   onUpdateEnemy(enemy.id, { isDefeated: event.target.checked })
                 }
               />
-              Defeated
+              {uiText.enemies.defeated}
             </label>
 
             <label>
-              Notes
+              {uiText.enemies.notes}
               <input
                 className="input"
                 value={enemy.notes}
-                placeholder="Template/manual config soon"
+                placeholder={uiText.enemies.notesPlaceholder}
                 onChange={(event) => onUpdateEnemy(enemy.id, { notes: event.target.value })}
               />
             </label>

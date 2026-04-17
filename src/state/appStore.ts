@@ -20,7 +20,8 @@ function calculateHealthState(current: number, max: number): HealthState {
 }
 
 export const initialState: AppState = {
-  sessionName: "Sessione DM",
+  locale: "en",
+  sessionName: "DM Session",
   round: 1,
   turnIndex: 0,
   players: [
@@ -52,6 +53,12 @@ export const initialState: AppState = {
 
 export function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
+    case "session/setLocale":
+      return {
+        ...state,
+        locale: action.payload
+      };
+
     case "session/setName":
       return {
         ...state,

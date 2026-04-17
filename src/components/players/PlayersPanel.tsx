@@ -1,13 +1,16 @@
-import { CONDITIONS } from "../../data/conditions";
+import { CONDITION_KEYS } from "../../data/conditions";
+import type { UiText } from "../../i18n/uiText";
 import type { Player } from "../../types/entity";
 
 interface PlayersPanelProps {
+  uiText: UiText;
   players: Player[];
   onAddPlayer: (name: string) => void;
   onUpdatePlayer: (id: string, patch: Partial<Player>) => void;
 }
 
 export function PlayersPanel({
+  uiText,
   players,
   onAddPlayer,
   onUpdatePlayer
@@ -15,9 +18,13 @@ export function PlayersPanel({
   return (
     <div className="panel players-panel">
       <div className="panel-header">
-        <h2>Players</h2>
-        <button className="btn" type="button" onClick={() => onAddPlayer(`Player ${players.length + 1}`)}>
-          + Add
+        <h2>{uiText.players.title}</h2>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => onAddPlayer(`${uiText.players.defaultNamePrefix} ${players.length + 1}`)}
+        >
+          {uiText.players.add}
         </button>
       </div>
 
@@ -28,12 +35,12 @@ export function PlayersPanel({
               className="input title-input"
               value={player.name}
               onChange={(event) => onUpdatePlayer(player.id, { name: event.target.value })}
-              aria-label="Player name"
+              aria-label={uiText.players.nameAriaLabel}
             />
 
             <div className="grid-2">
               <label>
-                Initiative
+                {uiText.players.initiative}
                 <input
                   className="input"
                   type="number"
@@ -45,11 +52,11 @@ export function PlayersPanel({
               </label>
 
               <label>
-                Last Roll
+                {uiText.players.lastRoll}
                 <input
                   className="input"
                   value={player.lastRoll}
-                  placeholder="es. 17"
+                  placeholder={uiText.players.lastRollPlaceholder}
                   onChange={(event) => onUpdatePlayer(player.id, { lastRoll: event.target.value })}
                 />
               </label>
@@ -57,7 +64,7 @@ export function PlayersPanel({
 
             <div className="grid-2">
               <label>
-                HP Current
+                {uiText.players.hpCurrent}
                 <input
                   className="input"
                   type="number"
@@ -68,7 +75,7 @@ export function PlayersPanel({
                 />
               </label>
               <label>
-                HP Max
+                {uiText.players.hpMax}
                 <input
                   className="input"
                   type="number"
@@ -82,37 +89,37 @@ export function PlayersPanel({
 
             <div className="grid-2">
               <label>
-                Condition
+                {uiText.players.condition}
                 <select
                   className="input"
                   value={player.condition}
                   onChange={(event) => onUpdatePlayer(player.id, { condition: event.target.value })}
                 >
-                  <option value="">None</option>
-                  {CONDITIONS.map((condition) => (
-                    <option key={condition} value={condition}>
-                      {condition}
+                  <option value="">{uiText.players.none}</option>
+                  {CONDITION_KEYS.map((conditionKey) => (
+                    <option key={conditionKey} value={conditionKey}>
+                      {uiText.conditions[conditionKey]}
                     </option>
                   ))}
                 </select>
               </label>
 
               <label>
-                Health State
+                {uiText.players.healthState}
                 <input
                   className="input"
-                  value={player.healthState}
+                  value={uiText.healthStates[player.healthState]}
                   readOnly
                 />
               </label>
             </div>
 
             <label>
-              Notes
+              {uiText.players.notes}
               <input
                 className="input"
                 value={player.notes}
-                placeholder="es. concentrazione su Bless"
+                placeholder={uiText.players.notesPlaceholder}
                 onChange={(event) => onUpdatePlayer(player.id, { notes: event.target.value })}
               />
             </label>
