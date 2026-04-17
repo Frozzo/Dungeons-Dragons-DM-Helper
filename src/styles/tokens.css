@@ -1,0 +1,15 @@
+:root {
+  --bg-main: #0f1217;
+  --bg-panel: #171b22;
+  --bg-card: #1e2430;
+  --bg-soft: #242c3a;
+  --text-main: #e6ebf2;
+  --text-muted: #99a7bd;
+  --line: #2c3648;
+  --accent: #6bc6a7;
+  --accent-2: #5aa3ff;
+  --danger: #ff6b6b;
+  --shadow: 0 8px 28px rgba(4, 8, 14, 0.35);
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
