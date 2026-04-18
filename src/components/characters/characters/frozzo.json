@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "savedAt": "2026-04-18T00:01:19.190Z",
+  "character": {
+    "id": "char-qe8ams59",
+    "name": "frozzo",
+    "raceId": "tiefling",
+    "classId": "warlock",
+    "backgroundId": "acolyte",
+    "alignmentId": "lawfulGood",
+    "level": 1,
+    "size": "Media",
+    "speed": 30,
+    "hitDie": "d8",
+    "proficiencyBonus": 2,
+    "abilityScores": {
+      "str": 10,
+      "dex": 13,
+      "con": 11,
+      "int": 13,
+      "wis": 14,
+      "cha": 13
+    },
+    "abilityModifiers": {
+      "str": 0,
+      "dex": 1,
+      "con": 0,
+      "int": 1,
+      "wis": 2,
+      "cha": 1
+    },
+    "savingThrows": [
+      "Saggezza",
+      "Carisma"
+    ],
+    "classSkillChoices": [
+      "Intimidire",
+      "Inganno"
+    ],
+    "backgroundSkills": [
+      "Intuizione",
+      "Religione"
+    ],
+    "skillProficiencies": [
+      "Intuizione",
+      "Religione",
+      "Intimidire",
+      "Inganno"
+    ],
+    "tools": [],
+    "languages": [
+      "Comune",
+      "Infernale",
+      "Due a scelta"
+    ],
+    "customLanguages": [],
+    "raceTraits": [
+      "Scurovisione",
+      "Resistenza infernale",
+      "Retaggio infernale"
+    ],
+    "classTraits": [
+      "Patrono ultraterreno",
+      "Magia del patto",
+      "Invocazioni occulte"
+    ],
+    "backgroundFeature": "Rifugio dei Fedeli",
+    "notes": "",
+    "createdAt": "2026-04-18T00:01:19.181Z",
+    "updatedAt": "2026-04-18T00:01:19.181Z"
+  }
+}

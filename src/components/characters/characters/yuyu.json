@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "savedAt": "2026-04-18T00:12:40.585Z",
+  "character": {
+    "id": "char-hhqdcvdd",
+    "name": "yuyu",
+    "raceId": "elf",
+    "subraceId": "wood-elf",
+    "classId": "fighter",
+    "backgroundId": "noble",
+    "alignmentId": "lawfulGood",
+    "level": 1,
+    "subclassId": "battle-master",
+    "subclassName": "Maestro di Battaglia",
+    "size": "Media",
+    "speed": 30,
+    "armorClass": 10,
+    "hpCurrent": 10,
+    "hpMax": 10,
+    "hitDie": "d10",
+    "proficiencyBonus": 2,
+    "armorSlot": "none",
+    "hasShield": false,
+    "primaryWeapon": "",
+    "secondaryWeapon": "",
+    "inventoryNotes": "",
+    "abilityScores": {
+      "str": 10,
+      "dex": 10,
+      "con": 10,
+      "int": 10,
+      "wis": 10,
+      "cha": 10
+    },
+    "abilityModifiers": {
+      "str": 0,
+      "dex": 0,
+      "con": 0,
+      "int": 0,
+      "wis": 0,
+      "cha": 0
+    },
+    "savingThrows": [
+      "Forza",
+      "Costituzione"
+    ],
+    "classSkillChoices": [
+      "Addestrare Animali",
+      "Sopravvivenza"
+    ],
+    "backgroundSkills": [
+      "Storia",
+      "Persuasione"
+    ],
+    "skillProficiencies": [
+      "Storia",
+      "Persuasione",
+      "Addestrare Animali",
+      "Sopravvivenza"
+    ],
+    "tools": [
+      "Un set da gioco a scelta"
+    ],
+    "languages": [
+      "Comune",
+      "Elfico",
+      "Una a scelta"
+    ],
+    "customLanguages": [],
+    "raceTraits": [
+      "Scurovisione",
+      "Ascendenza fatata",
+      "Trance",
+      "Maschera della natura",
+      "Passo rapido"
+    ],
+    "classTraits": [
+      "Stile di combattimento",
+      "Secondo Soffio",
+      "Azione impetuosa"
+    ],
+    "subclassTraits": [
+      "Combat Superiority",
+      "Student of War"
+    ],
+    "backgroundFeature": "Posizione di Privilegio",
+    "cantrips": [],
+    "spells": [],
+    "notes": "",
+    "createdAt": "2026-04-18T00:12:40.575Z",
+    "updatedAt": "2026-04-18T00:12:40.575Z"
+  }
+}

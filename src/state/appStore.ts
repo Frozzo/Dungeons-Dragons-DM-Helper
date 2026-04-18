@@ -24,19 +24,9 @@ export const initialState: AppState = {
   sessionName: "DM Session",
   round: 1,
   turnIndex: 0,
-  players: [
-    {
-      id: makeId("player"),
-      name: "Player 1",
-      initiative: 0,
-      hpCurrent: 20,
-      hpMax: 20,
-      lastRoll: "",
-      notes: "",
-      condition: "",
-      healthState: "ok"
-    }
+  characters: [
   ],
+  players: [],
   enemies: [
     {
       id: makeId("enemy"),
@@ -58,6 +48,9 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         locale: action.payload
       };
+
+    case "session/replaceState":
+      return action.payload;
 
     case "session/setName":
       return {
@@ -99,23 +92,10 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       };
     }
 
-    case "players/add":
+    case "players/addFromCharacter":
       return {
         ...state,
-        players: [
-          ...state.players,
-          {
-            id: makeId("player"),
-            name: action.payload.name,
-            initiative: 0,
-            hpCurrent: 20,
-            hpMax: 20,
-            lastRoll: "",
-            notes: "",
-            condition: "",
-            healthState: "ok"
-          }
-        ]
+        players: [...state.players, action.payload.player]
       };
 
     case "players/update":
@@ -160,6 +140,29 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           next.isDefeated = next.hpCurrent <= 0 || next.isDefeated;
           return next;
         })
+      };
+
+    case "characters/add":
+      return {
+        ...state,
+        characters: [...state.characters, action.payload.character]
+      };
+
+    case "characters/update":
+      return {
+        ...state,
+        characters: state.characters.map((character) =>
+          character.id === action.payload.characterId
+            ? { ...character, ...action.payload.patch, updatedAt: new Date().toISOString() }
+            : character
+        )
+      };
+
+    case "characters/remove":
+      return {
+        ...state,
+        characters: state.characters.filter((character) => character.id !== action.payload.characterId),
+        players: state.players.filter((player) => player.characterId !== action.payload.characterId)
       };
 
     default:

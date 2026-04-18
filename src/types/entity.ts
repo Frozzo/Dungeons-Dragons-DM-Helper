@@ -2,7 +2,16 @@ export type HealthState = "ok" | "wounded" | "critical" | "down";
 
 export interface Player {
   id: string;
+  characterId?: string;
   name: string;
+  classLabel?: string;
+  subclassLabel?: string;
+  armorClass: number;
+  armorSlot?: string;
+  hasShield?: boolean;
+  primaryWeapon?: string;
+  secondaryWeapon?: string;
+  inventoryNotes?: string;
   initiative: number;
   hpCurrent: number;
   hpMax: number;

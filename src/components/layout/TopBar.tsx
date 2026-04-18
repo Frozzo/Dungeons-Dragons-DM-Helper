@@ -7,6 +7,8 @@ interface TopBarProps {
   onLocaleChange: (value: Locale) => void;
   onSessionNameChange: (value: string) => void;
   onResetRound: () => void;
+  onSaveSession: () => Promise<void>;
+  onLoadSession: () => Promise<void>;
 }
 
 export function TopBar({
@@ -15,7 +17,9 @@ export function TopBar({
   sessionName,
   onLocaleChange,
   onSessionNameChange,
-  onResetRound
+  onResetRound,
+  onSaveSession,
+  onLoadSession
 }: TopBarProps) {
   return (
     <header className="top-bar panel">
@@ -44,6 +48,12 @@ export function TopBar({
         </select>
         <button className="btn btn-secondary" type="button" onClick={onResetRound}>
           {uiText.topBar.resetRound}
+        </button>
+        <button className="btn btn-secondary" type="button" onClick={() => void onSaveSession()}>
+          {uiText.topBar.saveSession}
+        </button>
+        <button className="btn btn-secondary" type="button" onClick={() => void onLoadSession()}>
+          {uiText.topBar.loadSession}
         </button>
         <button className="btn" type="button">
           {uiText.topBar.newCombat}

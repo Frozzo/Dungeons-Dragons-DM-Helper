@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "savedAt": "2026-04-17T23:58:00.554Z",
+  "character": {
+    "id": "char-mqun5tty",
+    "name": "Bah",
+    "raceId": "halfling",
+    "subraceId": "stout-halfling",
+    "classId": "barbarian",
+    "backgroundId": "acolyte",
+    "alignmentId": "lawfulGood",
+    "level": 1,
+    "size": "Piccola",
+    "speed": 25,
+    "hitDie": "d12",
+    "proficiencyBonus": 2,
+    "abilityScores": {
+      "str": 12,
+      "dex": 10,
+      "con": 10,
+      "int": 13,
+      "wis": 13,
+      "cha": 15
+    },
+    "abilityModifiers": {
+      "str": 1,
+      "dex": 0,
+      "con": 0,
+      "int": 1,
+      "wis": 1,
+      "cha": 2
+    },
+    "savingThrows": [
+      "Forza",
+      "Costituzione"
+    ],
+    "classSkillChoices": [
+      "Percezione",
+      "Atletica"
+    ],
+    "backgroundSkills": [
+      "Intuizione",
+      "Religione"
+    ],
+    "skillProficiencies": [
+      "Intuizione",
+      "Religione",
+      "Percezione",
+      "Atletica"
+    ],
+    "tools": [],
+    "languages": [
+      "Comune",
+      "Halfling",
+      "Due a scelta"
+    ],
+    "customLanguages": [],
+    "raceTraits": [
+      "Fortunato",
+      "Coraggioso",
+      "Agilita halfling",
+      "Resilienza robusta"
+    ],
+    "classTraits": [
+      "Ira",
+      "Difesa senza armatura",
+      "Attacco spericolato"
+    ],
+    "backgroundFeature": "Rifugio dei Fedeli",
+    "notes": "",
+    "createdAt": "2026-04-17T23:57:36.179Z",
+    "updatedAt": "2026-04-17T23:57:36.179Z"
+  }
+}
