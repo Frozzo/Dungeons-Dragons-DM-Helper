@@ -188,7 +188,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Strength", "Constitution"],
     skillChoices: ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"],
     skillChoiceCount: 2,
-    traits: ["Rage", "Unarmored Defense", "Reckless Attack"]
+    traits: ["Rage", "Unarmored Defense"]
   },
   {
     id: "bard",
@@ -197,7 +197,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Dexterity", "Charisma"],
     skillChoices: ["Any three"],
     skillChoiceCount: 3,
-    traits: ["Bardic Inspiration", "Spellcasting", "Jack of All Trades"]
+    traits: ["Bardic Inspiration", "Spellcasting"]
   },
   {
     id: "cleric",
@@ -206,7 +206,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Wisdom", "Charisma"],
     skillChoices: ["History", "Insight", "Medicine", "Persuasion", "Religion"],
     skillChoiceCount: 2,
-    traits: ["Spellcasting", "Divine Domain", "Channel Divinity"]
+    traits: ["Spellcasting", "Divine Domain"]
   },
   {
     id: "druid",
@@ -215,7 +215,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Intelligence", "Wisdom"],
     skillChoices: ["Arcana", "Animal Handling", "Insight", "Medicine", "Nature", "Perception", "Religion", "Survival"],
     skillChoiceCount: 2,
-    traits: ["Druidic", "Wild Shape", "Spellcasting"]
+    traits: ["Druidic", "Spellcasting"]
   },
   {
     id: "fighter",
@@ -224,7 +224,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Strength", "Constitution"],
     skillChoices: ["Acrobatics", "Animal Handling", "Athletics", "History", "Insight", "Intimidation", "Perception", "Survival"],
     skillChoiceCount: 2,
-    traits: ["Fighting Style", "Second Wind", "Action Surge"]
+    traits: ["Fighting Style", "Second Wind"]
   },
   {
     id: "monk",
@@ -233,7 +233,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Strength", "Dexterity"],
     skillChoices: ["Acrobatics", "Athletics", "History", "Insight", "Religion", "Stealth"],
     skillChoiceCount: 2,
-    traits: ["Martial Arts", "Ki", "Unarmored Movement"]
+    traits: ["Martial Arts", "Unarmored Defense"]
   },
   {
     id: "paladin",
@@ -242,7 +242,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Wisdom", "Charisma"],
     skillChoices: ["Athletics", "Insight", "Intimidation", "Medicine", "Persuasion", "Religion"],
     skillChoiceCount: 2,
-    traits: ["Divine Sense", "Lay on Hands", "Divine Smite"]
+    traits: ["Divine Sense", "Lay on Hands"]
   },
   {
     id: "ranger",
@@ -251,7 +251,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Strength", "Dexterity"],
     skillChoices: ["Animal Handling", "Athletics", "Insight", "Investigation", "Nature", "Perception", "Stealth", "Survival"],
     skillChoiceCount: 3,
-    traits: ["Favored Enemy", "Natural Explorer", "Spellcasting"]
+    traits: ["Favored Enemy", "Natural Explorer"]
   },
   {
     id: "rogue",
@@ -260,7 +260,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Dexterity", "Intelligence"],
     skillChoices: ["Acrobatics", "Athletics", "Deception", "Insight", "Intimidation", "Investigation", "Perception", "Performance", "Persuasion", "Sleight of Hand", "Stealth"],
     skillChoiceCount: 4,
-    traits: ["Sneak Attack", "Thieves' Cant", "Cunning Action"]
+    traits: ["Sneak Attack", "Thieves' Cant"]
   },
   {
     id: "sorcerer",
@@ -269,7 +269,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Constitution", "Charisma"],
     skillChoices: ["Arcana", "Deception", "Insight", "Intimidation", "Persuasion", "Religion"],
     skillChoiceCount: 2,
-    traits: ["Sorcerous Origin", "Font of Magic", "Metamagic"]
+    traits: ["Spellcasting", "Sorcerous Origin"]
   },
   {
     id: "warlock",
@@ -278,7 +278,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Wisdom", "Charisma"],
     skillChoices: ["Arcana", "Deception", "History", "Intimidation", "Investigation", "Nature", "Religion"],
     skillChoiceCount: 2,
-    traits: ["Otherworldly Patron", "Pact Magic", "Eldritch Invocations"]
+    traits: ["Otherworldly Patron", "Pact Magic"]
   },
   {
     id: "wizard",
@@ -287,7 +287,7 @@ export const CLASSES: ClassOption[] = [
     savingThrows: ["Intelligence", "Wisdom"],
     skillChoices: ["Arcana", "History", "Insight", "Investigation", "Medicine", "Religion"],
     skillChoiceCount: 2,
-    traits: ["Spellcasting", "Arcane Recovery", "Arcane Tradition"]
+    traits: ["Spellcasting", "Arcane Recovery"]
   }
 ];
 
@@ -308,30 +308,30 @@ export const BACKGROUNDS: BackgroundOption[] = [
 ];
 
 export const SUBCLASSES: SubclassOption[] = [
-  { id: "berserker", classId: "barbarian", label: { en: "Path of the Berserker", it: "Sentiero del Berserker" }, traits: ["Frenzy", "Mindless Rage"] },
+  { id: "berserker", classId: "barbarian", label: { en: "Path of the Berserker", it: "Sentiero del Berserker" }, traits: ["Frenzy"] },
   { id: "totem-warrior", classId: "barbarian", label: { en: "Path of the Totem Warrior", it: "Sentiero del Guerriero Totemico" }, traits: ["Spirit Seeker", "Totem Spirit"] },
   { id: "college-lore", classId: "bard", label: { en: "College of Lore", it: "Collegio del Sapere" }, traits: ["Bonus Proficiencies", "Cutting Words"] },
   { id: "college-valor", classId: "bard", label: { en: "College of Valor", it: "Collegio del Valore" }, traits: ["Bonus Proficiencies", "Combat Inspiration"] },
   { id: "life-domain", classId: "cleric", label: { en: "Life Domain", it: "Dominio della Vita" }, traits: ["Disciple of Life", "Channel Divinity: Preserve Life"] },
-  { id: "light-domain", classId: "cleric", label: { en: "Light Domain", it: "Dominio della Luce" }, traits: ["Warding Flare", "Radiance of the Dawn"] },
+  { id: "light-domain", classId: "cleric", label: { en: "Light Domain", it: "Dominio della Luce" }, traits: ["Warding Flare", "Channel Divinity: Radiance of the Dawn"] },
   { id: "moon-circle", classId: "druid", label: { en: "Circle of the Moon", it: "Circolo della Luna" }, traits: ["Combat Wild Shape", "Circle Forms"] },
   { id: "land-circle", classId: "druid", label: { en: "Circle of the Land", it: "Circolo della Terra" }, traits: ["Bonus Cantrip", "Natural Recovery"] },
-  { id: "champion", classId: "fighter", label: { en: "Champion", it: "Campione" }, traits: ["Improved Critical", "Remarkable Athlete"] },
+  { id: "champion", classId: "fighter", label: { en: "Champion", it: "Campione" }, traits: ["Improved Critical"] },
   { id: "battle-master", classId: "fighter", label: { en: "Battle Master", it: "Maestro di Battaglia" }, traits: ["Combat Superiority", "Student of War"] },
-  { id: "open-hand", classId: "monk", label: { en: "Way of the Open Hand", it: "Via della Mano Aperta" }, traits: ["Open Hand Technique", "Wholeness of Body"] },
-  { id: "shadow", classId: "monk", label: { en: "Way of Shadow", it: "Via dell'Ombra" }, traits: ["Shadow Arts", "Shadow Step"] },
+  { id: "open-hand", classId: "monk", label: { en: "Way of the Open Hand", it: "Via della Mano Aperta" }, traits: ["Open Hand Technique"] },
+  { id: "shadow", classId: "monk", label: { en: "Way of Shadow", it: "Via dell'Ombra" }, traits: ["Shadow Arts"] },
   { id: "devotion", classId: "paladin", label: { en: "Oath of Devotion", it: "Giuramento di Devozione" }, traits: ["Sacred Weapon", "Turn the Unholy"] },
   { id: "vengeance", classId: "paladin", label: { en: "Oath of Vengeance", it: "Giuramento di Vendetta" }, traits: ["Abjure Enemy", "Vow of Enmity"] },
-  { id: "hunter", classId: "ranger", label: { en: "Hunter", it: "Cacciatore" }, traits: ["Hunter's Prey", "Defensive Tactics"] },
-  { id: "beast-master", classId: "ranger", label: { en: "Beast Master", it: "Signore delle Bestie" }, traits: ["Ranger's Companion", "Exceptional Training"] },
+  { id: "hunter", classId: "ranger", label: { en: "Hunter", it: "Cacciatore" }, traits: ["Hunter's Prey"] },
+  { id: "beast-master", classId: "ranger", label: { en: "Beast Master", it: "Signore delle Bestie" }, traits: ["Ranger's Companion"] },
   { id: "thief", classId: "rogue", label: { en: "Thief", it: "Ladro" }, traits: ["Fast Hands", "Second-Story Work"] },
   { id: "assassin", classId: "rogue", label: { en: "Assassin", it: "Assassino" }, traits: ["Assassinate", "Infiltration Expertise"] },
   { id: "draconic", classId: "sorcerer", label: { en: "Draconic Bloodline", it: "Discendenza Draconica" }, traits: ["Dragon Ancestor", "Draconic Resilience"] },
   { id: "wild-magic", classId: "sorcerer", label: { en: "Wild Magic", it: "Magia Selvaggia" }, traits: ["Wild Magic Surge", "Tides of Chaos"] },
-  { id: "fiend", classId: "warlock", label: { en: "The Fiend", it: "Il Demone" }, traits: ["Dark One's Blessing", "Dark One's Own Luck"] },
-  { id: "great-old-one", classId: "warlock", label: { en: "The Great Old One", it: "Il Grande Antico" }, traits: ["Awakened Mind", "Entropic Ward"] },
-  { id: "evocation", classId: "wizard", label: { en: "School of Evocation", it: "Scuola di Invocazione" }, traits: ["Sculpt Spells", "Potent Cantrip"] },
-  { id: "illusion", classId: "wizard", label: { en: "School of Illusion", it: "Scuola di Illusione" }, traits: ["Improved Minor Illusion", "Malleable Illusions"] }
+  { id: "fiend", classId: "warlock", label: { en: "The Fiend", it: "Il Demone" }, traits: ["Dark One's Blessing"] },
+  { id: "great-old-one", classId: "warlock", label: { en: "The Great Old One", it: "Il Grande Antico" }, traits: ["Awakened Mind"] },
+  { id: "evocation", classId: "wizard", label: { en: "School of Evocation", it: "Scuola di Invocazione" }, traits: ["Sculpt Spells"] },
+  { id: "illusion", classId: "wizard", label: { en: "School of Illusion", it: "Scuola di Illusione" }, traits: ["Improved Minor Illusion"] }
 ];
 
 export const CLASS_SPELL_OPTIONS: Record<string, { cantrips: string[]; spells: string[] }> = {

@@ -1,16 +1,16 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-18T12:02:40.519Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
-    "classId": "warlock",
+    "id": "char-wok6xapf",
+    "name": "sfdfs",
+    "raceId": "dragonborn",
+    "classId": "monk",
     "backgroundId": "acolyte",
     "alignmentId": "lawfulGood",
     "level": 1,
-    "subclassId": "fiend",
-    "subclassName": "Il Demone",
+    "subclassId": "open-hand",
+    "subclassName": "Via della Mano Aperta",
     "size": "Media",
     "speed": 30,
     "armorClass": 10,
@@ -40,12 +40,12 @@
       "cha": 0
     },
     "savingThrows": [
-      "Saggezza",
-      "Carisma"
+      "Forza",
+      "Destrezza"
     ],
     "classSkillChoices": [
-      "Intimidire",
-      "Indagare"
+      "Furtivita",
+      "Religione"
     ],
     "backgroundSkills": [
       "Intuizione",
@@ -54,41 +54,30 @@
     "skillProficiencies": [
       "Intuizione",
       "Religione",
-      "Intimidire",
-      "Indagare"
+      "Furtivita"
     ],
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Draconico",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
-      "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Ascendenza draconica",
+      "Soffio",
+      "Resistenza ai danni"
     ],
     "classTraits": [
-      "Patrono ultraterreno",
-      "Magia del patto"
+      "Arti marziali",
+      "Difesa senza armatura"
     ],
-    "subclassTraits": [
-      "Dark One's Blessing"
-    ],
+    "subclassTraits": [],
     "backgroundFeature": "Rifugio dei Fedeli",
-    "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
-    ],
-    "spells": [
-      "Hex",
-      "Hellish Rebuke",
-      "Burning Hands",
-      "Command"
-    ],
+    "cantrips": [],
+    "spells": [],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-18T12:02:35.864Z",
+    "updatedAt": "2026-04-18T12:02:35.864Z"
   }
 }

@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-18T11:53:33.426Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
-    "classId": "warlock",
+    "id": "char-h4693ap4",
+    "name": "fcvcv",
+    "raceId": "human",
+    "classId": "barbarian",
     "backgroundId": "acolyte",
     "alignmentId": "lawfulGood",
     "level": 1,
-    "subclassId": "fiend",
-    "subclassName": "Il Demone",
+    "subclassId": "berserker",
+    "subclassName": "Sentiero del Berserker",
     "size": "Media",
     "speed": 30,
     "armorClass": 10,
-    "hpCurrent": 8,
-    "hpMax": 8,
-    "hitDie": "d8",
+    "hpCurrent": 12,
+    "hpMax": 12,
+    "hitDie": "d12",
     "proficiencyBonus": 2,
     "armorSlot": "none",
     "hasShield": false,
@@ -40,12 +40,12 @@
       "cha": 0
     },
     "savingThrows": [
-      "Saggezza",
-      "Carisma"
+      "Forza",
+      "Costituzione"
     ],
     "classSkillChoices": [
       "Intimidire",
-      "Indagare"
+      "Atletica"
     ],
     "backgroundSkills": [
       "Intuizione",
@@ -55,40 +55,29 @@
       "Intuizione",
       "Religione",
       "Intimidire",
-      "Indagare"
+      "Atletica"
     ],
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Una lingua extra",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
-      "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Versatile",
+      "Lingua extra"
     ],
     "classTraits": [
-      "Patrono ultraterreno",
-      "Magia del patto"
+      "Ira",
+      "Difesa senza armatura"
     ],
-    "subclassTraits": [
-      "Dark One's Blessing"
-    ],
+    "subclassTraits": [],
     "backgroundFeature": "Rifugio dei Fedeli",
-    "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
-    ],
-    "spells": [
-      "Hex",
-      "Hellish Rebuke",
-      "Burning Hands",
-      "Command"
-    ],
+    "cantrips": [],
+    "spells": [],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-18T11:53:30.457Z",
+    "updatedAt": "2026-04-18T11:53:30.457Z"
   }
 }

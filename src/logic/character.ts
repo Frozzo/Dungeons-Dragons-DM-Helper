@@ -1,9 +1,10 @@
 import { ALIGNMENTS, BACKGROUNDS, CLASS_SPELL_OPTIONS, CLASSES, RACES, SKILLS, SUBCLASSES, getLocalizedLabel } from "../data/characterOptions";
-import { formatSpellSummary, getSpellInfo } from "../data/spellLibrary";
+import { formatSpellEffect, formatSpellSummary, getSpellInfo } from "../data/spellLibrary";
 import { getClassCantripCount, getClassSpellCount, getClassTraitsForLevel, getSubclassTraitsForLevel } from "../data/levelProgression";
 import type { Locale } from "../i18n/uiText";
 import type { AbilityKey, AbilityModifiers, AbilityScores, Character, CharacterWizardDraft } from "../types/character";
 import type { Player } from "../types/entity";
+import { convertFeetToMetersText } from "./textFormatting";
 
 export const ABILITY_LABELS: Record<AbilityKey, { en: string; it: string }> = {
   str: { en: "Strength", it: "Forza" },
@@ -21,6 +22,11 @@ export interface SpellSelectionRules {
   spellsMax: number;
   kindLabel: string;
   note: string;
+}
+
+interface SpellGrant {
+  cantrips?: string[];
+  spells?: string[];
 }
 
 export interface AbilitySummaryEntry {
@@ -45,6 +51,13 @@ export interface SpellSummaryEntry {
   kind: "cantrip" | "spell";
 }
 
+export interface SpellcastingUsageProfile {
+  cantripUsage: string;
+  spellUsage: string;
+  slotSummary: string;
+  recovery: string;
+}
+
 export interface LevelUpResult {
   character: Character;
   gainedLevel: number;
@@ -65,6 +78,39 @@ export interface CharacterSummary {
   disadvantageNotes: string[];
   featureNotes: string[];
   spellNotes: SpellSummaryEntry[];
+}
+
+const DRACONIC_LINEAGE_DATA: Record<string, { en: string; it: string; damageEn: string; damageIt: string }> = {
+  acid: { en: "Black/Copper (Acid)", it: "Nero/Rame (Acido)", damageEn: "acid", damageIt: "acido" },
+  cold: { en: "Silver/White (Cold)", it: "Argento/Bianco (Freddo)", damageEn: "cold", damageIt: "freddo" },
+  fire: { en: "Brass/Gold/Red (Fire)", it: "Ottone/Oro/Rosso (Fuoco)", damageEn: "fire", damageIt: "fuoco" },
+  lightning: { en: "Blue/Bronze (Lightning)", it: "Blu/Bronzo (Fulmine)", damageEn: "lightning", damageIt: "fulmine" },
+  poison: { en: "Green (Poison)", it: "Verde (Veleno)", damageEn: "poison", damageIt: "veleno" }
+};
+
+export function getDraconicLineageOptions(locale: Locale): Array<{ id: string; label: string }> {
+  return Object.entries(DRACONIC_LINEAGE_DATA).map(([id, data]) => ({
+    id,
+    label: data[locale]
+  }));
+}
+
+function getDraconicResistanceNote(lineageId: string | undefined, locale: Locale): string {
+  if (!lineageId || !DRACONIC_LINEAGE_DATA[lineageId]) {
+    return "";
+  }
+
+  const data = DRACONIC_LINEAGE_DATA[lineageId];
+  return locale === "it"
+    ? `Resistenza draconica: ${data.damageIt}`
+    : `Draconic resistance: ${data.damageEn}`;
+}
+
+export function getOfficialProficiencyNote(level: number, locale: Locale): string {
+  const current = calculateProficiencyBonus(level);
+  return locale === "it"
+    ? `Bonus competenza attuale: +${current}. Regole ufficiali: livelli 1-4 = +2, livelli 5-8 = +3.`
+    : `Current proficiency bonus: +${current}. Official rules: levels 1-4 = +2, levels 5-8 = +3.`;
 }
 
 export function makeId(prefix: string): string {
@@ -259,6 +305,42 @@ const SPELLCASTING_ABILITY_BY_CLASS: Record<string, AbilityKey> = {
   wizard: "int"
 };
 
+const FULL_CASTER_SLOT_TABLE: Record<number, string> = {
+  1: "1st: 2",
+  2: "1st: 3",
+  3: "1st: 4, 2nd: 2",
+  4: "1st: 4, 2nd: 3",
+  5: "1st: 4, 2nd: 3, 3rd: 2"
+};
+
+const HALF_CASTER_SLOT_TABLE: Record<number, string> = {
+  1: "-",
+  2: "1st: 2",
+  3: "1st: 3",
+  4: "1st: 3",
+  5: "1st: 4, 2nd: 2"
+};
+
+const WARLOCK_SLOT_TABLE: Record<number, string> = {
+  1: "1st (pact): 1",
+  2: "1st (pact): 2",
+  3: "2nd (pact): 2",
+  4: "2nd (pact): 2",
+  5: "3rd (pact): 2"
+};
+
+function localizeSlotSummary(slotSummary: string, locale: Locale): string {
+  if (locale !== "it") {
+    return slotSummary;
+  }
+
+  return slotSummary
+    .split("1st").join("1°")
+    .split("2nd").join("2°")
+    .split("3rd").join("3°")
+    .split("(pact)").join("(patto)");
+}
+
 const TRAIT_EXPLANATIONS: Record<string, { en: string; it: string }> = {
   Darkvision: { en: "See in dim light as if it were bright light, and in darkness as if it were dim light.", it: "Vedi nella luce fioca come fosse luce piena e nel buio come luce fioca." },
   "Dwarven Resilience": { en: "You have advantage on saving throws against poison and resistance to poison damage.", it: "Hai vantaggio ai tiri salvezza contro il veleno e resistenza ai danni da veleno." },
@@ -321,6 +403,44 @@ const TRAIT_EXPLANATIONS: Record<string, { en: string; it: string }> = {
   "Eldritch Invocations": { en: "Choose supernatural upgrades that modify your warlock powers.", it: "Scegli potenziamenti soprannaturali che modificano i poteri del warlock." },
   "Arcane Recovery": { en: "Recover some spell slots on a short rest.", it: "Recuperi alcuni slot incantesimo con un riposo breve." },
   "Arcane Tradition": { en: "Your wizard school grants themed spell features.", it: "La tua scuola di magia concede tratti tematici." },
+  Frenzy: { en: "While raging, you can make one melee attack as a bonus action on each of your turns and gain exhaustion afterward.", it: "Durante l'ira puoi fare un attacco in mischia come azione bonus in ogni tuo turno, ma poi accumuli sfinimento." },
+  "Mindless Rage": { en: "While raging, you can't be charmed or frightened and are immune to those conditions.", it: "Durante l'ira non puoi essere ammaliato o spaventato e sei immune a queste condizioni." },
+  "Danger Sense": { en: "You have advantage on Dexterity saves against effects you can see.", it: "Hai vantaggio ai tiri salvezza di Destrezza contro effetti che puoi vedere." },
+  "Fast Movement": { en: "Your walking speed increases while not wearing heavy armor.", it: "La tua velocita' a piedi aumenta quando non indossi armatura pesante." },
+  "Spirit Seeker": { en: "You can cast commune with nature and beast sense as rituals.", it: "Puoi lanciare commune with nature e beast sense come rituali." },
+  "Totem Spirit": { en: "At 3rd level you choose a totem spirit that grants a combat and travel benefit.", it: "Al 3° livello scegli uno spirito totemico che concede un beneficio in combattimento e nel viaggio." },
+  "Aspect of the Beast": { en: "Your totem spirit grants a stronger animal aspect at 6th level.", it: "Il tuo spirito totemico concede un aspetto animale piu' potente al 6° livello." },
+  "Bonus Proficiencies": { en: "You gain skill or tool proficiencies from your subclass.", it: "Ottieni competenze in abilita' o strumenti dalla tua sottoclasse." },
+  "Cutting Words": { en: "You can subtract your Bardic Inspiration die from enemy rolls.", it: "Puoi sottrarre il tuo dado di Ispirazione Bardica ai tiri dei nemici." },
+  "Combat Inspiration": { en: "Your Bardic Inspiration can boost damage or AC in combat.", it: "La tua Ispirazione Bardica puo' aumentare i danni o la CA in combattimento." },
+  "Disciple of Life": { en: "Your healing spells restore extra hit points.", it: "I tuoi incantesimi di guarigione ripristinano PF extra." },
+  "Channel Divinity: Preserve Life": { en: "You can restore hit points to several creatures in an area.", it: "Puoi ripristinare PF a piu' creature in un'area." },
+  "Warding Flare": { en: "You can impose disadvantage on an attack against you.", it: "Puoi imporre svantaggio a un attacco contro di te." },
+  "Radiance of the Dawn": { en: "You unleash sunlight that damages darkness-bound foes.", it: "Liberi una luce solare che danneggia i nemici legati all'oscurita'." },
+  "Combat Wild Shape": { en: "You can use Wild Shape to heal and fight more effectively.", it: "Puoi usare Forma Selvatica per curarti e combattere meglio." },
+  "Circle Forms": { en: "Your Wild Shape options improve into stronger beast forms.", it: "Le tue opzioni di Forma Selvatica diventano forme bestiali piu' forti." },
+  "Bonus Cantrip": { en: "You learn an extra druid cantrip.", it: "Impari un trucchetto da druido extra." },
+  "Natural Recovery": { en: "You recover some spell slots after a short rest.", it: "Recuperi alcuni slot incantesimo dopo un riposo breve." },
+  "Improved Critical": { en: "You score critical hits on a lower roll.", it: "Infliggi colpi critici con un tiro piu' basso." },
+  "Combat Superiority": { en: "You gain superiority dice and maneuvers.", it: "Ottieni dadi superiorita' e manovre." },
+  "Open Hand Technique": { en: "Your flurry hits can push, knock prone, or stop reactions.", it: "I tuoi colpi della raffica possono spingere, mettere prono o bloccare le reazioni." },
+  "Shadow Arts": { en: "You can spend ki to cast darkness and other shadow tricks.", it: "Puoi spendere ki per lanciare darkness e altri trucchi d'ombra." },
+  "Sacred Weapon": { en: "You can add your Charisma bonus to attack rolls with one weapon.", it: "Puoi aggiungere il bonus di Carisma ai tiri per colpire con un'arma." },
+  "Abjure Enemy": { en: "You can frighten a foe and keep it from moving closer.", it: "Puoi spaventare un nemico e impedirgli di avvicinarsi." },
+  "Hunter's Prey": { en: "You gain one of several combat bonuses against prey.", it: "Ottieni uno di vari bonus di combattimento contro la preda." },
+  "Ranger's Companion": { en: "You gain a beast companion to fight beside you.", it: "Ottieni un compagno bestiale che combatte al tuo fianco." },
+  "Fast Hands": { en: "You can use Sleight of Hand or thief's tools as a bonus action.", it: "Puoi usare Rapidita di Mano o gli attrezzi da scasso come azione bonus." },
+  Assassinate: { en: "You have advantage against creatures that haven't acted yet.", it: "Hai vantaggio contro le creature che non hanno ancora agito." },
+  "Dragon Ancestor": { en: "You choose a dragon type that shapes your draconic powers.", it: "Scegli un tipo di drago che plasma i tuoi poteri draconici." },
+  "Draconic Resilience": { en: "Your hit points and AC improve from draconic magic.", it: "I tuoi PF e la tua CA migliorano grazie alla magia draconica." },
+  "Wild Magic Surge": { en: "Your magic can trigger random surges.", it: "La tua magia puo' innescare improvvise scariche casuali." },
+  "Tides of Chaos": { en: "You can gain advantage now and risk a surge later.", it: "Puoi ottenere vantaggio ora e rischiare una scarica piu' tardi." },
+  "Dark One's Blessing": { en: "Dropping a foe can grant you temporary hit points.", it: "Quando mandi a terra un nemico puoi ottenere PF temporanei." },
+  "Awakened Mind": { en: "You can communicate telepathically with nearby creatures.", it: "Puoi comunicare telepaticamente con creature vicine." },
+  "Sculpt Spells": { en: "Your area spells leave allies unharmed.", it: "I tuoi incantesimi ad area lasciano illesi gli alleati." },
+  "Potent Cantrip": { en: "Your cantrips still hurt on successful saves.", it: "I tuoi trucchetti fanno comunque male anche su tiro salvezza riuscito." },
+  "Improved Minor Illusion": { en: "Your minor illusion cantrip becomes more flexible.", it: "Il tuo trucchetto illusione minore diventa piu' versatile." },
+  "Malleable Illusions": { en: "You can reshape an active illusion.", it: "Puoi rimodellare un'illusione attiva." },
   "Draconic Ancestry": { en: "Choose a draconic lineage; it determines your breath and resistance theme.", it: "Scegli una discendenza draconica; determina il tema del soffio e della resistenza." },
   "Breath Weapon": { en: "You can exhale destructive energy in a cone or line, forcing a save.", it: "Puoi esalare energia distruttiva in cono o linea, costringendo a un tiro salvezza." },
   "Damage Resistance": { en: "You gain resistance to a damage type tied to your ancestry.", it: "Ottieni resistenza a un tipo di danno legato alla tua discendenza." },
@@ -340,12 +460,33 @@ const TRAIT_EXPLANATIONS: Record<string, { en: string; it: string }> = {
   "City Secrets": { en: "You know the hidden routes and contacts of urban life.", it: "Conosci i percorsi nascosti e i contatti della vita cittadina." }
 };
 
+const TRAIT_KEY_BY_LOCALIZED_LABEL: Record<string, string> = Object.entries(TERM_TRANSLATIONS).reduce((acc, [key, label]) => {
+  if (TRAIT_EXPLANATIONS[key]) {
+    acc[key] = key;
+    acc[label.en] = key;
+    acc[label.it] = key;
+  }
+  return acc;
+}, {} as Record<string, string>);
+
 function getModifierText(value: number): string {
   return `${value >= 0 ? "+" : ""}${value}`;
 }
 
+export function formatTraitDetail(trait: string, locale: Locale): string {
+  const label = localizeTerm(trait, locale);
+  const explanation = getTraitExplanation(trait, locale);
+  return explanation && explanation !== label ? `${label}: ${explanation}` : label;
+}
+
+export function formatTraitDetails(traits: string[], locale: Locale): string[] {
+  return traits.map((trait) => formatTraitDetail(trait, locale));
+}
+
 function getTraitExplanation(trait: string, locale: Locale): string {
-  return TRAIT_EXPLANATIONS[trait]?.[locale] ?? localizeTerm(trait, locale);
+  const canonicalTrait = TRAIT_KEY_BY_LOCALIZED_LABEL[trait] ?? trait;
+  const text = TRAIT_EXPLANATIONS[canonicalTrait]?.[locale] ?? localizeTerm(trait, locale);
+  return locale === "it" ? convertFeetToMetersText(text) : text;
 }
 
 export function resolveSkillId(skillName: string): string | null {
@@ -383,6 +524,60 @@ export function getSpellOptionsForClass(classId: string) {
   return CLASS_SPELL_OPTIONS[classId] ?? { cantrips: [], spells: [] };
 }
 
+const SUBCLASS_SPELL_GRANTS: Record<string, Record<number, SpellGrant>> = {
+  "life-domain": {
+    1: { spells: ["Bless", "Cure Wounds"] },
+    3: { spells: ["Lesser Restoration", "Spiritual Weapon"] },
+    5: { spells: ["Beacon of Hope", "Revivify"] }
+  },
+  "light-domain": {
+    1: { spells: ["Burning Hands", "Faerie Fire"] },
+    3: { spells: ["Flaming Sphere", "Scorching Ray"] },
+    5: { spells: ["Daylight", "Fireball"] }
+  },
+  devotion: {
+    3: { spells: ["Protection from Evil and Good", "Sanctuary"] },
+    5: { spells: ["Lesser Restoration", "Zone of Truth"] }
+  },
+  vengeance: {
+    3: { spells: ["Bane", "Hunter's Mark"] },
+    5: { spells: ["Hold Person", "Misty Step"] }
+  },
+  fiend: {
+    1: { spells: ["Burning Hands", "Command"] },
+    3: { spells: ["Scorching Ray", "Blindness/Deafness"] },
+    5: { spells: ["Fireball", "Stinking Cloud"] }
+  }
+};
+
+function mergeUniqueEntries(...lists: string[][]): string[] {
+  const result: string[] = [];
+  for (const list of lists) {
+    for (const entry of list) {
+      if (!result.includes(entry)) {
+        result.push(entry);
+      }
+    }
+  }
+  return result;
+}
+
+function getGrantedSpellsForLevel(subclassId: string | undefined, level: number): SpellGrant {
+  if (!subclassId) return {};
+  const progressions = SUBCLASS_SPELL_GRANTS[subclassId];
+  if (!progressions) return {};
+
+  const grant: SpellGrant = {};
+  for (const [key, value] of Object.entries(progressions)) {
+    const threshold = Number(key);
+    if (Number.isNaN(threshold) || level < threshold) continue;
+    grant.cantrips = mergeUniqueEntries(grant.cantrips ?? [], value.cantrips ?? []);
+    grant.spells = mergeUniqueEntries(grant.spells ?? [], value.spells ?? []);
+  }
+
+  return grant;
+}
+
 export function getSpellSelectionRules(classId: string, level: number, modifiers: AbilityModifiers, locale: Locale = "en"): SpellSelectionRules {
   const spellcastingAbility = SPELLCASTING_ABILITY_BY_CLASS[classId];
   const spellMod = spellcastingAbility ? modifiers[spellcastingAbility] : 0;
@@ -414,10 +609,25 @@ export function getSpellSelectionRules(classId: string, level: number, modifiers
     };
   }
   if (classId === "paladin") {
-    return { cantripsMax: 0, spellsMax: 0, kindLabel: "none", note: locale === "it" ? "Il paladino non lancia incantesimi al 1° livello." : "Paladins do not cast spells at level 1." };
+    const preparedCount = Math.max(1, Math.floor(level / 2) + spellMod);
+    return {
+      cantripsMax: 0,
+      spellsMax: level <= 1 ? 0 : preparedCount,
+      kindLabel: "prepared",
+      note: locale === "it"
+        ? (level <= 1 ? "Il paladino non lancia incantesimi al 1° livello." : "Dal 2° livello il paladino prepara un numero di incantesimi pari a meta livello (arrotondata per difetto) + modificatore di Carisma.")
+        : (level <= 1 ? "Paladins do not cast spells at level 1." : "From level 2 onward, paladins prepare spells equal to half level (rounded down) + Charisma modifier.")
+    };
   }
   if (classId === "ranger") {
-    return { cantripsMax: 0, spellsMax: 0, kindLabel: "none", note: locale === "it" ? "Il ranger non lancia incantesimi al 1° livello." : "Rangers do not cast spells at level 1." };
+    return {
+      cantripsMax: 0,
+      spellsMax: level <= 1 ? 0 : spellMax,
+      kindLabel: "known",
+      note: locale === "it"
+        ? (level <= 1 ? "Il ranger non lancia incantesimi al 1° livello." : "Dal 2° livello il ranger conosce un numero limitato di incantesimi, come indicato dalla progressione di classe.")
+        : (level <= 1 ? "Rangers do not cast spells at level 1." : "From level 2 onward, rangers know a limited number of spells as shown by class progression.")
+    };
   }
   if (classId === "sorcerer") {
     return { cantripsMax: cantripMax, spellsMax: spellMax, kindLabel: "known", note: locale === "it" ? "Lo stregone conosce 4 trucchetti e 2 incantesimi di 1° livello al 1° livello." : "Sorcerers know 4 cantrips and 2 1st-level spells at level 1." };
@@ -435,6 +645,60 @@ export function getSpellSelectionRules(classId: string, level: number, modifiers
   }
 
   return { cantripsMax: 0, spellsMax: 0, kindLabel: "none", note: locale === "it" ? "Questa classe non usa la selezione di incantesimi al 1° livello." : "This class does not use spell selection at level 1." };
+}
+
+export function getSpellcastingUsageProfile(classId: string, level: number, locale: Locale): SpellcastingUsageProfile {
+  const cantripUsage = locale === "it"
+    ? "A volonta (rispettando il tempo di lancio)"
+    : "At will (respecting casting time)";
+
+  const nonCasterProfile: SpellcastingUsageProfile = {
+    cantripUsage,
+    spellUsage: locale === "it" ? "Nessun lancio incantesimi a questo livello" : "No spellcasting at this level",
+    slotSummary: "-",
+    recovery: locale === "it" ? "-" : "-"
+  };
+
+  if (["fighter", "barbarian", "monk", "rogue"].includes(classId)) {
+    return nonCasterProfile;
+  }
+
+  if (classId === "warlock") {
+    const slotSummary = WARLOCK_SLOT_TABLE[Math.min(5, Math.max(1, level))] ?? "-";
+    return {
+      cantripUsage,
+      spellUsage: locale === "it" ? "Incantesimi noti (patto)" : "Known spells (pact)",
+      slotSummary: localizeSlotSummary(slotSummary, locale),
+      recovery: locale === "it" ? "Gli slot del patto si recuperano con riposo breve o lungo" : "Pact slots recover on short or long rest"
+    };
+  }
+
+  if (["bard", "cleric", "druid", "sorcerer", "wizard"].includes(classId)) {
+    const slotSummary = FULL_CASTER_SLOT_TABLE[Math.min(5, Math.max(1, level))] ?? "-";
+    const usage = classId === "cleric" || classId === "druid"
+      ? (locale === "it" ? "Incantesimi preparati" : "Prepared spells")
+      : (locale === "it" ? "Incantesimi conosciuti" : "Known spells");
+    return {
+      cantripUsage,
+      spellUsage: usage,
+      slotSummary: localizeSlotSummary(slotSummary, locale),
+      recovery: locale === "it" ? "Slot recuperati con riposo lungo" : "Slots recover on long rest"
+    };
+  }
+
+  if (classId === "paladin" || classId === "ranger") {
+    const slotSummary = HALF_CASTER_SLOT_TABLE[Math.min(5, Math.max(1, level))] ?? "-";
+    return {
+      cantripUsage,
+      spellUsage: classId === "paladin"
+        ? (locale === "it" ? "Incantesimi preparati" : "Prepared spells")
+        : (locale === "it" ? "Incantesimi conosciuti" : "Known spells"),
+      slotSummary: localizeSlotSummary(slotSummary, locale),
+      recovery: locale === "it" ? "Slot recuperati con riposo lungo" : "Slots recover on long rest"
+    };
+  }
+
+  return nonCasterProfile;
 }
 
 export function getCharacterSummary(character: Character, locale: Locale): CharacterSummary {
@@ -476,12 +740,25 @@ export function getCharacterSummary(character: Character, locale: Locale): Chara
       name,
       kind,
       detail: spell ? formatSpellSummary(name, locale) : name,
-      effect: spell ? spell.effect : ""
+      effect: spell ? formatSpellEffect(spell.effect, locale) : ""
     };
   });
 
   const featureSources = [...character.raceTraits, ...character.classTraits, ...character.subclassTraits, character.backgroundFeature].filter(Boolean);
-  const featureNotes = [...new Set(featureSources.map((trait) => getTraitExplanation(trait, locale)).filter(Boolean))];
+  let featureNotes = [...new Set(featureSources.map((trait) => getTraitExplanation(trait, locale)).filter(Boolean))];
+
+  if (character.raceId === "dragonborn" && character.draconicLineage) {
+    const lineageResistance = getDraconicResistanceNote(character.draconicLineage, locale);
+    featureNotes = featureNotes.filter((note) => {
+      if (locale === "it") {
+        return !/scegli una discendenza draconica|ottieni resistenza a un tipo di danno legato alla tua discendenza/i.test(note);
+      }
+      return !/choose a draconic lineage|gain resistance to a damage type tied to your ancestry/i.test(note);
+    });
+    if (lineageResistance) {
+      featureNotes.push(lineageResistance);
+    }
+  }
 
   const resistances = featureNotes.filter((note) => /resist/i.test(note) || /resistenza/i.test(note));
   const immunities = featureNotes.filter((note) => /can't put you to sleep/i.test(note) || /non puo'? addormentarti/i.test(note));
@@ -541,13 +818,15 @@ export function levelUpCharacter(character: Character, _locale: Locale): LevelUp
   const gainedHp = Math.max(1, newHpMax - oldHpMax);
   const oldCantrips = character.cantrips;
   const oldSpells = character.spells;
-  const cantripLimit = getClassCantripCount(character.classId, nextLevel);
-  const spellLimit = getClassSpellCount(character.classId, nextLevel);
+  const spellRules = getSpellSelectionRules(character.classId, nextLevel, abilityModifiers, _locale);
+  const cantripLimit = spellRules.cantripsMax;
+  const spellLimit = spellRules.spellsMax;
   const cantripPool = getSpellOptionsForClass(character.classId).cantrips;
   const spellPool = getSpellOptionsForClass(character.classId).spells;
+  const bonusGrants = getGrantedSpellsForLevel(character.subclassId, nextLevel);
 
-  const nextCantrips = fillToLimit(oldCantrips, cantripPool, cantripLimit);
-  const nextSpells = fillToLimit(oldSpells, spellPool, spellLimit);
+  const nextCantrips = mergeUniqueEntries(oldCantrips, bonusGrants.cantrips ?? [], fillToLimit(oldCantrips, cantripPool, cantripLimit));
+  const nextSpells = mergeUniqueEntries(oldSpells, bonusGrants.spells ?? [], fillToLimit(oldSpells, spellPool, spellLimit));
 
   const nextClassTraits = getClassTraitsForLevel(character.classId, nextLevel);
   const nextSubclassTraits = getSubclassTraitsForLevel(character.subclassId, nextLevel);
@@ -555,6 +834,7 @@ export function levelUpCharacter(character: Character, _locale: Locale): LevelUp
   const armorClass = calculateArmorClassForDraft(
     {
       classId: character.classId,
+      draconicLineage: character.draconicLineage ?? "",
       armorSlot: character.armorSlot,
       hasShield: character.hasShield
     } as CharacterWizardDraft,
@@ -673,6 +953,7 @@ export function buildCharacterFromDraft(draft: CharacterWizardDraft, locale: Loc
   const classTraits = getClassTraitsForLevel(draft.classId, draft.level);
   const subclassTraits = getSubclassTraitsForLevel(subclassOption?.id, draft.level);
   const spellRules = getSpellSelectionRules(draft.classId, draft.level, abilityModifiers);
+  const bonusGrants = getGrantedSpellsForLevel(subclassOption?.id, draft.level);
 
   const backgroundSkillIds = resolveBackgroundSkillIds(draft.backgroundId);
   const classSkillIds = [...draft.classSkillChoices];
@@ -691,6 +972,7 @@ export function buildCharacterFromDraft(draft: CharacterWizardDraft, locale: Loc
     id: makeId("char"),
     name: draft.name,
     raceId: draft.raceId,
+    draconicLineage: draft.raceId === "dragonborn" ? draft.draconicLineage : undefined,
     subraceId: draft.subraceId || undefined,
     classId: draft.classId,
     backgroundId: draft.backgroundId,
@@ -723,8 +1005,8 @@ export function buildCharacterFromDraft(draft: CharacterWizardDraft, locale: Loc
     classTraits: classTraits.map((item) => localizeTerm(item, locale)),
     subclassTraits: subclassTraits.map((item) => localizeTerm(item, locale)),
     backgroundFeature: background ? getLocalizedLabel(background.feature, locale) : "",
-    cantrips: draft.selectedCantrips.slice(0, spellRules.cantripsMax),
-    spells: draft.selectedSpells.slice(0, spellRules.spellsMax),
+    cantrips: mergeUniqueEntries(draft.selectedCantrips.slice(0, spellRules.cantripsMax), bonusGrants.cantrips ?? []),
+    spells: mergeUniqueEntries(draft.selectedSpells.slice(0, spellRules.spellsMax), bonusGrants.spells ?? []),
     notes: draft.notes,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()

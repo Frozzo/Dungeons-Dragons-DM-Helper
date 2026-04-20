@@ -22,6 +22,7 @@ export interface Character {
   id: string;
   name: string;
   raceId: string;
+  draconicLineage?: string;
   subraceId?: string;
   classId: string;
   subclassId?: string;
@@ -64,6 +65,7 @@ export interface Character {
 export interface CharacterWizardDraft {
   name: string;
   raceId: string;
+  draconicLineage: string;
   subraceId: string;
   classId: string;
   subclassId: string;

@@ -25,7 +25,7 @@ export type AppAction =
       type: "players/update";
       payload: { id: string; patch: Partial<Player> };
     }
-  | { type: "enemies/add"; payload: { name: string } }
+  | { type: "enemies/add"; payload: { enemy: Omit<Enemy, "id"> } }
   | {
       type: "enemies/update";
       payload: { id: string; patch: Partial<Enemy> };

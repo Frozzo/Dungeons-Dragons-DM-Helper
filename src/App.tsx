@@ -11,7 +11,8 @@ import { UI_TEXT } from "./i18n/uiText";
 import { CharactersPanel } from "./components/characters/CharactersPanel";
 import { buildCharacterFromDraft, createPlayerFromCharacter, levelUpCharacter } from "./logic/character";
 import { makeCharacterSnapshot, makeSessionSnapshot, openJsonFile, saveJsonToFile } from "./logic/filePersistence";
-import type { SessionSnapshot } from "./types/character";
+import { MONSTER_POOL, createEnemyFromTemplate } from "./data/monsterPool";
+import type { CharacterSnapshot, SessionSnapshot } from "./types/character";
 import type { CharacterWizardDraft } from "./types/character";
 import type { Player } from "./types/entity";
 
@@ -63,6 +64,51 @@ export default function App() {
 
     if (snapshot?.state) {
       dispatch({ type: "session/replaceState", payload: snapshot.state });
+    }
+  };
+
+  const handleLoadCharacter = async () => {
+    const snapshot = await openJsonFile<CharacterSnapshot | { character?: CharacterSnapshot["character"] }>({
+      types: [{ description: "D&D DM Helper Character", accept: { "application/json": [".json"] } }]
+    });
+
+    const character = typeof snapshot === "object" && snapshot !== null && "character" in snapshot ? snapshot.character : null;
+    if (!character) {
+      return;
+    }
+
+    const existingCharacter = state.characters.find((item) => item.id === character.id);
+    if (existingCharacter) {
+      dispatch({ type: "characters/update", payload: { characterId: character.id, patch: character } });
+    } else {
+      dispatch({ type: "characters/add", payload: { character } });
+    }
+
+    const player = createPlayerFromCharacter(character);
+    const existingPlayer = state.players.find((item) => item.characterId === character.id);
+    if (existingPlayer) {
+      dispatch({
+        type: "players/update",
+        payload: {
+          id: existingPlayer.id,
+          patch: {
+            name: player.name,
+            classLabel: player.classLabel,
+            subclassLabel: player.subclassLabel,
+            armorClass: player.armorClass,
+            armorSlot: player.armorSlot,
+            hasShield: player.hasShield,
+            primaryWeapon: player.primaryWeapon,
+            secondaryWeapon: player.secondaryWeapon,
+            inventoryNotes: player.inventoryNotes,
+            hpCurrent: player.hpCurrent,
+            hpMax: player.hpMax,
+            notes: player.notes
+          }
+        }
+      });
+    } else {
+      dispatch({ type: "players/addFromCharacter", payload: { player } });
     }
   };
 
@@ -163,6 +209,7 @@ export default function App() {
             characters={state.characters}
             hasCharacterFolder={hasCharacterFolder}
             onChooseCharacterFolder={handleChooseCharacterFolder}
+            onLoadCharacter={handleLoadCharacter}
             onSaveCharacter={handleSaveCharacter}
             onRemoveCharacter={(characterId) => dispatch({ type: "characters/remove", payload: { characterId } })}
           />
@@ -184,10 +231,16 @@ export default function App() {
         <section className="panel-column panel-column-right">
           <EnemiesPanel
             uiText={uiText}
+            locale={state.locale}
             enemies={state.enemies}
-            onAddEnemy={(name) =>
-              dispatch({ type: "enemies/add", payload: { name } })
-            }
+            monsterPool={MONSTER_POOL}
+            onAddEnemyFromTemplate={(templateId) => {
+              const template = MONSTER_POOL.find((item) => item.id === templateId);
+              if (!template) {
+                return;
+              }
+              dispatch({ type: "enemies/add", payload: { enemy: createEnemyFromTemplate(template, state.locale) } });
+            }}
             onUpdateEnemy={(id, patch) =>
               dispatch({ type: "enemies/update", payload: { id, patch } })
             }

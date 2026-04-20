@@ -15,15 +15,19 @@ import {
   calculatePointBuySpent,
   clampPointBuyScore,
   getSpellSelectionRules,
+  getSpellcastingUsageProfile,
   getSpellOptionsForClass,
   getSubclassesForClass,
   getClassSkillChoiceCount,
   getSkillLabel,
+  formatTraitDetails,
+  getDraconicLineageOptions,
+  getOfficialProficiencyNote,
   localizeTerm,
   resolveBackgroundSkillIds,
   resolveClassSkillOptionIds
 } from "../../logic/character";
-import { formatSpellSummary, getSpellInfo } from "../../data/spellLibrary";
+import { formatSpellEffect, formatSpellSummary, getSpellInfo } from "../../data/spellLibrary";
 import type { Locale, UiText } from "../../i18n/uiText";
 import type { AbilityKey, CharacterWizardDraft } from "../../types/character";
 
@@ -39,6 +43,7 @@ interface CharacterBuilderProps {
 const defaultDraft = (): CharacterWizardDraft => ({
   name: "",
   raceId: RACES[0]?.id ?? "human",
+  draconicLineage: "fire",
   subraceId: RACES[0]?.subraces?.[0]?.id ?? "",
   classId: CLASSES[0]?.id ?? "fighter",
   subclassId: "",
@@ -82,12 +87,18 @@ export function CharacterBuilder({
   const previewCharacter = useMemo(() => buildCharacterFromDraft(draft, locale), [draft, locale]);
   const spellRules = useMemo(() => getSpellSelectionRules(draft.classId, draft.level, previewCharacter.abilityModifiers, locale), [draft.classId, draft.level, previewCharacter.abilityModifiers, locale]);
   const characterSummary = useMemo(() => getCharacterSummary(previewCharacter, locale), [previewCharacter, locale]);
+  const spellcastingUsage = useMemo(() => getSpellcastingUsageProfile(draft.classId, draft.level, locale), [draft.classId, draft.level, locale]);
   const availableClassSkillIds = useMemo(() => resolveClassSkillOptionIds(draft.classId), [draft.classId]);
   const backgroundSkillIds = useMemo(() => resolveBackgroundSkillIds(draft.backgroundId), [draft.backgroundId]);
   const classSkillChoiceCount = useMemo(() => getClassSkillChoiceCount(draft.classId), [draft.classId]);
   const pointBuySpent = useMemo(() => calculatePointBuySpent(draft.abilityScores), [draft.abilityScores]);
   const pointBuyRemaining = 27 - pointBuySpent;
   const classToolkit = useMemo(() => CLASS_TOOLKITS[draft.classId] ?? CLASS_TOOLKITS.fighter, [draft.classId]);
+  const draconicLineageOptions = useMemo(() => getDraconicLineageOptions(locale), [locale]);
+  const selectedDraconicLineage = useMemo(
+    () => draconicLineageOptions.find((item) => item.id === draft.draconicLineage)?.label ?? "-",
+    [draconicLineageOptions, draft.draconicLineage]
+  );
 
   const ui = {
     speed: locale === "it" ? "Velocita" : "Speed",
@@ -101,6 +112,7 @@ export function CharacterBuilder({
     classTraits: locale === "it" ? "Tratti Classe" : "Class Traits",
     subclass: locale === "it" ? "Sottoclasse" : "Subclass",
     subclassTraits: locale === "it" ? "Tratti Sottoclasse" : "Subclass Traits",
+    subraceTraits: locale === "it" ? "Tratti Sottorazza" : "Subrace Traits",
     raceInfo: locale === "it" ? "Cosa ti da la razza" : "What the race grants",
     subraceInfo: locale === "it" ? "Cosa cambia con la sottorazza" : "What the subrace changes",
     classInfo: locale === "it" ? "Cosa ti da la classe" : "What the class grants",
@@ -144,6 +156,7 @@ export function CharacterBuilder({
     skillsBreakdown: locale === "it" ? "Abilita e tiri" : "Skills and saves",
     spellsBreakdown: locale === "it" ? "Magie con dettagli" : "Spells with details"
   };
+  const draconicLineageLabel = locale === "it" ? "Discendenza draconica" : "Draconic Lineage";
 
   const armorLabel = (value: string): string => {
     if (value === "light") return locale === "it" ? "Armatura leggera" : "Light armor";
@@ -237,6 +250,7 @@ export function CharacterBuilder({
                 setDraft((current) => ({
                   ...current,
                   raceId: event.target.value,
+                  draconicLineage: event.target.value === "dragonborn" ? (current.draconicLineage || "fire") : "",
                   subraceId: nextRace?.subraces?.[0]?.id ?? ""
                 }));
               }}>
@@ -256,6 +270,17 @@ export function CharacterBuilder({
               </select>
             </label>
           </div>
+
+          {draft.raceId === "dragonborn" && (
+            <label>
+              {draconicLineageLabel}
+              <select className="input" value={draft.draconicLineage} onChange={(event) => setDraft({ ...draft, draconicLineage: event.target.value })}>
+                {draconicLineageOptions.map((option) => (
+                  <option key={option.id} value={option.id}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <div className="grid-2">
             <label>
@@ -303,16 +328,21 @@ export function CharacterBuilder({
           </div>
 
           {(spellRules.cantripsMax > 0 || spellRules.spellsMax > 0) ? (
-            <div className="card review-card">
-              <strong>{locale === "it" ? "Selezione magie" : "Spell Selection"}</strong>
-              <p className="muted">{ui.officialSpellRules}: {spellRules.note}</p>
+            <div className="stack">
+              <div className="card review-card">
+                <strong>{locale === "it" ? "Selezione magie" : "Spell Selection"}</strong>
+                <p className="muted">{ui.officialSpellRules}: {spellRules.note}</p>
+                <p className="muted">{locale === "it" ? "Slot" : "Slots"}: {spellcastingUsage.slotSummary}</p>
+                <p className="muted">{locale === "it" ? "Recupero" : "Recovery"}: {spellcastingUsage.recovery}</p>
+              </div>
 
               {spellOptions.cantrips.length > 0 && (
-                <>
-                  <p className="muted">{ui.cantrips} {spellRules.cantripsMax > 0 ? `(${draft.selectedCantrips.length}/${spellRules.cantripsMax})` : ""}</p>
+                <div className="card review-card">
+                  <strong>{ui.cantrips} {spellRules.cantripsMax > 0 ? `(${draft.selectedCantrips.length}/${spellRules.cantripsMax})` : ""}</strong>
+                  <p className="muted">{locale === "it" ? "Uso" : "Usage"}: {spellcastingUsage.cantripUsage}</p>
                   <div className="tag-wrap">
                     {spellOptions.cantrips.map((name) => (
-                      <div key={name} className="stack" style={{ minWidth: "220px" }}>
+                      <div key={name} className="card spell-entry-card">
                         <button
                           type="button"
                           className={`btn btn-secondary btn-small ${draft.selectedCantrips.includes(name) ? "skill-chip-selected" : ""}`}
@@ -321,19 +351,21 @@ export function CharacterBuilder({
                           {name}
                         </button>
                         <span className="muted">{formatSpellSummary(name, locale)}</span>
-                        <span className="muted">{getSpellInfo(name)?.effect ?? ""}</span>
+                        <span className="muted">{formatSpellEffect(getSpellInfo(name)?.effect ?? "", locale)}</span>
                       </div>
                     ))}
                   </div>
-                </>
+                </div>
               )}
 
               {spellOptions.spells.length > 0 && (
-                <>
-                  <p className="muted">{ui.spells} {spellRules.spellsMax > 0 ? `(${draft.selectedSpells.length}/${spellRules.spellsMax})` : ""}</p>
+                <div className="card review-card">
+                  <strong>{ui.spells} {spellRules.spellsMax > 0 ? `(${draft.selectedSpells.length}/${spellRules.spellsMax})` : ""}</strong>
+                  <p className="muted">{locale === "it" ? "Uso" : "Usage"}: {spellcastingUsage.spellUsage}</p>
+                  <p className="muted">{locale === "it" ? "Slot" : "Slots"}: {spellcastingUsage.slotSummary}</p>
                   <div className="tag-wrap">
                     {spellOptions.spells.map((name) => (
-                      <div key={name} className="stack" style={{ minWidth: "220px" }}>
+                      <div key={name} className="card spell-entry-card">
                         <button
                           type="button"
                           className={`btn btn-secondary btn-small ${draft.selectedSpells.includes(name) ? "skill-chip-selected" : ""}`}
@@ -342,11 +374,11 @@ export function CharacterBuilder({
                           {name}
                         </button>
                         <span className="muted">{formatSpellSummary(name, locale)}</span>
-                        <span className="muted">{getSpellInfo(name)?.effect ?? ""}</span>
+                        <span className="muted">{formatSpellEffect(getSpellInfo(name)?.effect ?? "", locale)}</span>
                       </div>
                     ))}
                   </div>
-                </>
+                </div>
               )}
             </div>
           ) : (
@@ -379,6 +411,7 @@ export function CharacterBuilder({
                 ? `Scegli ${classSkillChoiceCount} competenze dalla lista classe.`
                 : `Choose ${classSkillChoiceCount} proficiencies from your class list.`}
             </p>
+            <p className="muted">{getOfficialProficiencyNote(draft.level, locale)}</p>
             <div className="tag-wrap">
               {availableClassSkillIds.map((skillId) => {
                 const selected = draft.classSkillChoices.includes(skillId);
@@ -401,8 +434,9 @@ export function CharacterBuilder({
             <p className="muted">
               {race?.speed ? `${ui.speed}: ${race.speed} · ` : ""}
               {race?.size[locale] ? `${ui.size}: ${race.size[locale]} · ` : ""}
-              {ui.raceTraits}: {(race?.traits ?? []).map((item) => localizeTerm(item, locale)).join(", ") || "-"}
+              {ui.raceTraits}: {formatTraitDetails(race?.traits ?? [], locale).join(" · ") || "-"}
             </p>
+            {draft.raceId === "dragonborn" && <p className="muted">{draconicLineageLabel}: {selectedDraconicLineage}</p>}
             <p className="muted">{locale === "it" ? "Lingue di partenza" : "Starting languages"}: {(race?.languages ?? []).map((item) => localizeTerm(item, locale)).join(", ") || "-"}</p>
           </div>
 
@@ -410,11 +444,11 @@ export function CharacterBuilder({
             <div className="card review-card">
               <strong>{ui.subraceInfo}</strong>
               <p className="muted">{getLocalizedLabel(subrace.label, locale)}</p>
-              <p className="muted">{ui.subclassTraits}: {(subrace.traits ?? []).map((item) => localizeTerm(item, locale)).join(", ") || "-"}</p>
+              <p className="muted">{ui.subraceTraits}: {formatTraitDetails(subrace.traits ?? [], locale).join(" · ") || "-"}</p>
               <p className="muted">
                 {locale === "it" ? "Altre sottorazze" : "Other subraces"}: {(race?.subraces ?? [])
                   .filter((item) => item.id !== subrace.id)
-                  .map((item) => `${getLocalizedLabel(item.label, locale)} (${item.traits.map((trait) => localizeTerm(trait, locale)).join(", ")})`)
+                  .map((item) => `${getLocalizedLabel(item.label, locale)} (${formatTraitDetails(item.traits, locale).join(" · ")})`)
                   .join(" | ") || "-"}
               </p>
             </div>
@@ -425,18 +459,18 @@ export function CharacterBuilder({
             <p className="muted">
               {classOption ? `${ui.hitDie}: ${classOption.hitDie} · ${ui.savingThrows}: ${classOption.savingThrows.map((item) => localizeTerm(item, locale)).join(", ")}` : ""}
             </p>
-            <p className="muted">{ui.classTraits}: {(classOption?.traits ?? []).map((item) => localizeTerm(item, locale)).join(", ") || "-"}</p>
+            <p className="muted">{ui.classTraits}: {formatTraitDetails(classOption?.traits ?? [], locale).join(" · ") || "-"}</p>
           </div>
 
           {selectedSubclass && (
             <div className="card review-card">
               <strong>{ui.subclassInfo}</strong>
               <p className="muted">{getLocalizedLabel(selectedSubclass.label, locale)}</p>
-              <p className="muted">{ui.subclassTraits}: {(selectedSubclass.traits ?? []).map((item) => localizeTerm(item, locale)).join(", ") || "-"}</p>
+              <p className="muted">{ui.subclassTraits}: {formatTraitDetails(selectedSubclass.traits ?? [], locale).join(" · ") || "-"}</p>
               <p className="muted">
                 {locale === "it" ? "Altre sottoclassi" : "Other subclasses"}: {subclassOptions
                   .filter((item) => item.id !== selectedSubclass.id)
-                  .map((item) => `${getLocalizedLabel(item.label, locale)} (${item.traits.map((trait) => localizeTerm(trait, locale)).join(", ")})`)
+                  .map((item) => `${getLocalizedLabel(item.label, locale)} (${formatTraitDetails(item.traits, locale).join(" · ")})`)
                   .join(" | ") || "-"}
               </p>
             </div>
@@ -474,6 +508,7 @@ export function CharacterBuilder({
           <div className="card review-card">
             <strong>{locale === "it" ? "Aiuto DM rapido" : "Quick DM Help"}</strong>
             <p className="muted">{ui.speed}: {race?.speed ?? 30} · {ui.size}: {race?.size[locale] ?? "-"} · {ui.hitDie}: {classOption?.hitDie ?? "d8"}</p>
+            <p className="muted">{getOfficialProficiencyNote(draft.level, locale)}</p>
             <p className="muted">{ui.savingThrows}: {(classOption?.savingThrows ?? []).map((item) => localizeTerm(item, locale)).join(", ")}</p>
             <p className="muted">{ui.backgroundFeature}: {background?.feature[locale] ?? "-"}</p>
           </div>
@@ -612,9 +647,10 @@ export function CharacterBuilder({
               <li><strong>{ui.spells}:</strong> {previewCharacter.spells.join(", ") || "-"}</li>
               <li><strong>{ui.inventory}:</strong> {previewCharacter.inventoryNotes || "-"}</li>
               <li><strong>{ui.languages}:</strong> {previewCharacter.languages.join(", ")}</li>
-              <li><strong>{ui.raceTraits}:</strong> {previewCharacter.raceTraits.join(", ")}</li>
-              <li><strong>{ui.classTraits}:</strong> {previewCharacter.classTraits.join(", ")}</li>
-              <li><strong>{ui.subclassTraits}:</strong> {previewCharacter.subclassTraits.join(", ") || "-"}</li>
+              {draft.raceId === "dragonborn" && <li><strong>{draconicLineageLabel}:</strong> {selectedDraconicLineage}</li>}
+              <li><strong>{ui.raceTraits}:</strong> {formatTraitDetails([...(race?.traits ?? []), ...(subrace?.traits ?? [])], locale).join(" · ")}</li>
+              <li><strong>{ui.classTraits}:</strong> {formatTraitDetails(classOption?.traits ?? [], locale).join(" · ")}</li>
+              <li><strong>{ui.subclassTraits}:</strong> {formatTraitDetails(selectedSubclass?.traits ?? [], locale).join(" · ") || "-"}</li>
               <li><strong>{ui.backgroundFeature}:</strong> {previewCharacter.backgroundFeature}</li>
             </ul>
 

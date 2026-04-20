@@ -30,7 +30,10 @@ export const initialState: AppState = {
   enemies: [
     {
       id: makeId("enemy"),
+      sourceId: "goblin",
       name: "Enemy 1",
+      challengeRating: "1/4",
+      speed: "30 ft",
       armorClass: 12,
       hpCurrent: 15,
       hpMax: 15,
@@ -118,13 +121,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           ...state.enemies,
           {
             id: makeId("enemy"),
-            name: action.payload.name,
-            armorClass: 12,
-            hpCurrent: 10,
-            hpMax: 10,
-            initiative: 0,
-            isDefeated: false,
-            notes: ""
+            ...action.payload.enemy
           }
         ]
       };

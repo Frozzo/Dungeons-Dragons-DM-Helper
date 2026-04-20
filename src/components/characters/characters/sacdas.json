@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "savedAt": "2026-04-18T15:01:06.659Z",
+  "character": {
+    "id": "char-3eb8kxjk",
+    "name": "sacdas",
+    "raceId": "gnome",
+    "subraceId": "forest-gnome",
+    "classId": "barbarian",
+    "backgroundId": "acolyte",
+    "alignmentId": "lawfulGood",
+    "level": 1,
+    "subclassId": "totem-warrior",
+    "subclassName": "Path of the Totem Warrior",
+    "size": "Small",
+    "speed": 25,
+    "armorClass": 10,
+    "hpCurrent": 12,
+    "hpMax": 12,
+    "hitDie": "d12",
+    "proficiencyBonus": 2,
+    "armorSlot": "none",
+    "hasShield": false,
+    "primaryWeapon": "",
+    "secondaryWeapon": "",
+    "inventoryNotes": "",
+    "abilityScores": {
+      "str": 10,
+      "dex": 10,
+      "con": 10,
+      "int": 10,
+      "wis": 10,
+      "cha": 10
+    },
+    "abilityModifiers": {
+      "str": 0,
+      "dex": 0,
+      "con": 0,
+      "int": 0,
+      "wis": 0,
+      "cha": 0
+    },
+    "savingThrows": [
+      "Strength",
+      "Constitution"
+    ],
+    "classSkillChoices": [
+      "Perception",
+      "Nature"
+    ],
+    "backgroundSkills": [
+      "Insight",
+      "Religion"
+    ],
+    "skillProficiencies": [
+      "Insight",
+      "Religion",
+      "Perception",
+      "Nature"
+    ],
+    "tools": [],
+    "languages": [
+      "Common",
+      "Gnomish",
+      "Two of your choice"
+    ],
+    "customLanguages": [],
+    "raceTraits": [
+      "Darkvision",
+      "Gnome Cunning",
+      "Minor Illusion",
+      "Speak with Small Beasts"
+    ],
+    "classTraits": [
+      "Rage",
+      "Unarmored Defense"
+    ],
+    "subclassTraits": [],
+    "backgroundFeature": "Shelter of the Faithful",
+    "cantrips": [],
+    "spells": [],
+    "notes": "",
+    "createdAt": "2026-04-18T15:01:04.903Z",
+    "updatedAt": "2026-04-18T15:01:04.903Z"
+  }
+}

@@ -10,6 +10,7 @@ interface CharactersPanelProps {
   characters: Character[];
   hasCharacterFolder: boolean;
   onChooseCharacterFolder: () => Promise<void>;
+  onLoadCharacter: () => Promise<void>;
   onSaveCharacter: (draft: CharacterWizardDraft) => Promise<string>;
   onRemoveCharacter: (characterId: string) => void;
 }
@@ -20,6 +21,7 @@ export function CharactersPanel({
   characters,
   hasCharacterFolder,
   onChooseCharacterFolder,
+  onLoadCharacter,
   onSaveCharacter,
   onRemoveCharacter
 }: CharactersPanelProps) {
@@ -29,7 +31,7 @@ export function CharactersPanel({
     <div className="panel characters-panel">
       <div className="panel-header">
         <h2>{uiText.characters.title}</h2>
-        <button className="btn" type="button" onClick={() => setBuilderOpen((value) => !value)}>
+        <button className="btn" type="button" onClick={() => setBuilderOpen(true)}>
           {uiText.characters.newCharacter}
         </button>
       </div>
@@ -38,21 +40,28 @@ export function CharactersPanel({
         <button className="btn btn-secondary" type="button" onClick={onChooseCharacterFolder}>
           {uiText.characters.chooseFolder}
         </button>
+        <button className="btn btn-secondary" type="button" onClick={onLoadCharacter}>
+          {uiText.characters.loadCharacter}
+        </button>
         <span className="muted">
           {hasCharacterFolder ? uiText.characters.folderReady : uiText.characters.chooseFolder}
         </span>
       </div>
 
-      {builderOpen && (
-        <CharacterBuilder
-          uiText={uiText}
-          locale={locale}
-          hasCharacterFolder={hasCharacterFolder}
-          onChooseCharacterFolder={onChooseCharacterFolder}
-          onClose={() => setBuilderOpen(false)}
-          onSave={onSaveCharacter}
-        />
-      )}
+      {builderOpen ? (
+        <div className="builder-fullscreen-overlay" role="dialog" aria-modal="true" aria-label={uiText.builder.title}>
+          <div className="builder-fullscreen-panel">
+            <CharacterBuilder
+              uiText={uiText}
+              locale={locale}
+              hasCharacterFolder={hasCharacterFolder}
+              onChooseCharacterFolder={onChooseCharacterFolder}
+              onClose={() => setBuilderOpen(false)}
+              onSave={onSaveCharacter}
+            />
+          </div>
+        </div>
+      ) : null}
 
       <div className="stack">
         {characters.length === 0 ? (

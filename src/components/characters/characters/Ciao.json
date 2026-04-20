@@ -1,16 +1,16 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-18T13:59:00.800Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
-    "classId": "warlock",
+    "id": "char-gp1ezjo3",
+    "name": "Ciao",
+    "raceId": "dragonborn",
+    "classId": "cleric",
     "backgroundId": "acolyte",
-    "alignmentId": "lawfulGood",
+    "alignmentId": "trueNeutral",
     "level": 1,
-    "subclassId": "fiend",
-    "subclassName": "Il Demone",
+    "subclassId": "life-domain",
+    "subclassName": "Dominio della Vita",
     "size": "Media",
     "speed": 30,
     "armorClass": 10,
@@ -44,8 +44,8 @@
       "Carisma"
     ],
     "classSkillChoices": [
-      "Intimidire",
-      "Indagare"
+      "Medicina",
+      "Persuasione"
     ],
     "backgroundSkills": [
       "Intuizione",
@@ -54,41 +54,41 @@
     "skillProficiencies": [
       "Intuizione",
       "Religione",
-      "Intimidire",
-      "Indagare"
+      "Medicina",
+      "Persuasione"
     ],
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Draconico",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
-      "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Ascendenza draconica",
+      "Soffio",
+      "Resistenza ai danni"
     ],
     "classTraits": [
-      "Patrono ultraterreno",
-      "Magia del patto"
+      "Lancio di incantesimi",
+      "Dominio divino"
     ],
     "subclassTraits": [
-      "Dark One's Blessing"
+      "Disciple of Life"
     ],
     "backgroundFeature": "Rifugio dei Fedeli",
     "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
+      "Guidance",
+      "Thaumaturgy",
+      "Spare the Dying"
     ],
     "spells": [
-      "Hex",
-      "Hellish Rebuke",
-      "Burning Hands",
-      "Command"
+      "Spiritual Weapon",
+      "Bless",
+      "Cure Wounds"
     ],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-18T13:58:57.472Z",
+    "updatedAt": "2026-04-18T13:58:57.472Z"
   }
 }

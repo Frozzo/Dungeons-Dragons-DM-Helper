@@ -1,3 +1,5 @@
+import { convertFeetToMetersText } from "../logic/textFormatting";
+
 export type SpellKind = "cantrip" | "spell";
 
 export interface SpellInfo {
@@ -66,6 +68,18 @@ const SPELLS: SpellInfo[] = [
   { name: "Sleep", kind: "spell", level: 1, school: "Enchantment", castingTime: "1 action", range: "90 ft", effect: "Creatures with the lowest current hit points fall asleep until the total pool is used up or the spell ends." },
   { name: "Chromatic Orb", kind: "spell", level: 1, school: "Evocation", castingTime: "1 action", range: "90 ft", saveOrAttack: "ranged spell attack", damage: "3d8 chosen damage type", effect: "Choose acid, cold, fire, lightning, poison, or thunder when you cast it." },
   { name: "Burning Hands", kind: "spell", level: 1, school: "Evocation", castingTime: "1 action", range: "Self", saveOrAttack: "DEX save", damage: "3d6 fire", effect: "A cone of fire scorches creatures in front of you." },
+  { name: "Bane", kind: "spell", level: 1, school: "Enchantment", castingTime: "1 action", range: "30 ft", concentration: true, saveOrAttack: "CHA save", effect: "Up to three creatures subtract 1d4 from attack rolls and saving throws." },
+  { name: "Beacon of Hope", kind: "spell", level: 3, school: "Abjuration", castingTime: "1 action", range: "30 ft", concentration: true, effect: "Healing spells restore maximum hit points in the area and allies have advantage on Wisdom and death saves." },
+  { name: "Blindness/Deafness", kind: "spell", level: 2, school: "Necromancy", castingTime: "1 action", range: "30 ft", saveOrAttack: "CON save", effect: "A creature is blinded or deafened on a failed save." },
+  { name: "Daylight", kind: "spell", level: 3, school: "Evocation", castingTime: "1 action", range: "60 ft", effect: "Creates bright light in a large area and dispels magical darkness of 3rd level or lower." },
+  { name: "Fireball", kind: "spell", level: 3, school: "Evocation", castingTime: "1 action", range: "150 ft", damage: "8d6 fire", saveOrAttack: "DEX save", effect: "A bright explosion scorches creatures in a 20-foot radius." },
+  { name: "Flaming Sphere", kind: "spell", level: 2, school: "Conjuration", castingTime: "1 action", range: "60 ft", concentration: true, saveOrAttack: "DEX save", damage: "2d6 fire", effect: "You create a rolling sphere of fire that can burn creatures nearby." },
+  { name: "Protection from Evil and Good", kind: "spell", level: 1, school: "Abjuration", castingTime: "1 action", range: "Touch", concentration: true, effect: "The target is protected against certain creature types and has better defense against them." },
+  { name: "Revivify", kind: "spell", level: 3, school: "Necromancy", castingTime: "1 action", range: "Touch", effect: "Return a creature that died within the last minute to life with 1 hit point." },
+  { name: "Scorching Ray", kind: "spell", level: 2, school: "Evocation", castingTime: "1 action", range: "120 ft", damage: "3 rays of 2d6 fire", saveOrAttack: "ranged spell attack", effect: "You hurl multiple rays of fire at one or more targets." },
+  { name: "Spiritual Weapon", kind: "spell", level: 2, school: "Evocation", castingTime: "1 bonus action", range: "60 ft", effect: "Creates a floating weapon that can strike for force damage without concentration." },
+  { name: "Stinking Cloud", kind: "spell", level: 3, school: "Conjuration", castingTime: "1 action", range: "90 ft", concentration: true, saveOrAttack: "CON save", effect: "A noxious cloud heavily obscures an area and can incapacitate creatures inside." },
+  { name: "Zone of Truth", kind: "spell", level: 2, school: "Enchantment", castingTime: "1 action", range: "60 ft", concentration: true, saveOrAttack: "CHA save", effect: "Creatures in the area can't knowingly speak a deliberate lie." },
   { name: "Mage Armor", kind: "spell", level: 1, school: "Abjuration", castingTime: "1 action", range: "Touch", effect: "A willing creature's AC becomes 13 + Dexterity modifier." },
   { name: "Find Familiar", kind: "spell", level: 1, school: "Conjuration", castingTime: "1 hour", range: "10 ft", effect: "Summon a spirit in animal form to scout and assist." },
   { name: "Mirror Image", kind: "spell", level: 2, school: "Illusion", castingTime: "1 action", range: "Self", effect: "Illusory duplicates make you harder to hit." },
@@ -105,15 +119,74 @@ export function formatSpellSummary(name: string, locale: "en" | "it"): string {
   const spell = getSpellInfo(name);
   if (!spell) return name;
 
+  const localizeText = (value: string): string => {
+    if (locale !== "it") return value;
+    const replacePairs: Array<[string, string]> = [
+      ["Enchantment", "Ammaliamento"],
+      ["Illusion", "Illusione"],
+      ["Conjuration", "Evocazione"],
+      ["Evocation", "Invocazione"],
+      ["Divination", "Divinazione"],
+      ["Transmutation", "Trasmutazione"],
+      ["Necromancy", "Necromanzia"],
+      ["Abjuration", "Abiurazione"],
+      ["Self", "Se stesso"],
+      ["Touch", "Contatto"],
+      ["WIS save", "TS SAG"],
+      ["DEX save", "TS DES"],
+      ["CON save", "TS COS"],
+      ["CHA save", "TS CAR"],
+      ["STR save", "TS FOR"],
+      ["ranged spell attack", "attacco magico a distanza"],
+      ["melee spell attack", "attacco magico in mischia"],
+      ["psychic", "psichici"],
+      ["radiant", "radianti"],
+      ["necrotic", "necrotici"],
+      ["force", "da forza"],
+      ["fire", "da fuoco"],
+      ["cold", "da freddo"],
+      ["thunder", "da tuono"],
+      ["poison", "da veleno"],
+      ["acid", "da acido"]
+    ];
+    let mapped = value;
+    for (const [from, to] of replacePairs) {
+      mapped = mapped.split(from).join(to);
+    }
+    return convertFeetToMetersText(mapped);
+  };
   const parts: string[] = [];
   if (spell.kind === "cantrip") {
     parts.push(locale === "it" ? "Trucchetto" : "Cantrip");
   } else if (spell.level) {
     parts.push(locale === "it" ? `Livello ${spell.level}` : `Level ${spell.level}`);
   }
-  parts.push(spell.school);
-  parts.push(spell.range);
-  if (spell.damage) parts.push(spell.damage);
-  if (spell.saveOrAttack) parts.push(spell.saveOrAttack);
+  parts.push(localizeText(spell.school));
+  parts.push(localizeText(spell.range));
+  if (spell.damage) parts.push(localizeText(spell.damage));
+  if (spell.saveOrAttack) parts.push(localizeText(spell.saveOrAttack));
   return parts.join(" · ");
+}
+
+export function formatSpellEffect(effect: string, locale: "en" | "it"): string {
+  if (locale !== "it") {
+    return effect;
+  }
+  const replacePairs: Array<[string, string]> = [
+    ["disadvantage", "svantaggio"],
+    ["advantage", "vantaggio"],
+    ["attack rolls", "tiri per colpire"],
+    ["attack roll", "tiro per colpire"],
+    ["saving throws", "tiri salvezza"],
+    ["saving throw", "tiro salvezza"],
+    ["hit points", "punti ferita"],
+    ["spellcasting ability modifier", "modificatore di caratteristica da incantatore"],
+    ["short rest", "riposo breve"],
+    ["long rest", "riposo lungo"]
+  ];
+  let mapped = effect;
+  for (const [from, to] of replacePairs) {
+    mapped = mapped.split(from).join(to);
+  }
+  return convertFeetToMetersText(mapped);
 }

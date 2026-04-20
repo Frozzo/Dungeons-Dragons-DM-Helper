@@ -23,7 +23,10 @@ export interface Player {
 
 export interface Enemy {
   id: string;
+  sourceId?: string;
   name: string;
+  challengeRating?: string;
+  speed?: string;
   armorClass: number;
   hpCurrent: number;
   hpMax: number;

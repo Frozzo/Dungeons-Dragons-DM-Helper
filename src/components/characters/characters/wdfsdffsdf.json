@@ -1,18 +1,19 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-20T14:35:44.374Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
+    "id": "char-ju4budnq",
+    "name": "wdfsdffsdf",
+    "raceId": "halfling",
+    "subraceId": "lightfoot-halfling",
     "classId": "warlock",
     "backgroundId": "acolyte",
     "alignmentId": "lawfulGood",
     "level": 1,
     "subclassId": "fiend",
     "subclassName": "Il Demone",
-    "size": "Media",
-    "speed": 30,
+    "size": "Piccola",
+    "speed": 25,
     "armorClass": 10,
     "hpCurrent": 8,
     "hpMax": 8,
@@ -24,7 +25,7 @@
     "secondaryWeapon": "",
     "inventoryNotes": "",
     "abilityScores": {
-      "str": 10,
+      "str": 14,
       "dex": 10,
       "con": 10,
       "int": 10,
@@ -32,7 +33,7 @@
       "cha": 10
     },
     "abilityModifiers": {
-      "str": 0,
+      "str": 2,
       "dex": 0,
       "con": 0,
       "int": 0,
@@ -44,8 +45,8 @@
       "Carisma"
     ],
     "classSkillChoices": [
-      "Intimidire",
-      "Indagare"
+      "Inganno",
+      "Intimidire"
     ],
     "backgroundSkills": [
       "Intuizione",
@@ -54,20 +55,21 @@
     "skillProficiencies": [
       "Intuizione",
       "Religione",
-      "Intimidire",
-      "Indagare"
+      "Inganno",
+      "Intimidire"
     ],
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Halfling",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
-      "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Fortunato",
+      "Coraggioso",
+      "Agilita halfling",
+      "Naturalmente furtivo"
     ],
     "classTraits": [
       "Patrono ultraterreno",
@@ -78,17 +80,17 @@
     ],
     "backgroundFeature": "Rifugio dei Fedeli",
     "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
+      "Eldritch Blast",
+      "Minor Illusion"
     ],
     "spells": [
-      "Hex",
+      "Armor of Agathys",
       "Hellish Rebuke",
       "Burning Hands",
       "Command"
     ],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-20T14:35:40.450Z",
+    "updatedAt": "2026-04-20T14:35:40.450Z"
   }
 }

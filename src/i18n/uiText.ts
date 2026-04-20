@@ -43,8 +43,12 @@ export interface UiText {
   enemies: {
     title: string;
     add: string;
+    addFromPool: string;
+    monsterPool: string;
     defaultNamePrefix: string;
     nameAriaLabel: string;
+    challengeRating: string;
+    speed: string;
     initiative: string;
     armorClass: string;
     hpCurrent: string;
@@ -87,6 +91,7 @@ export interface UiText {
     inventory: string;
     savedInSession: string;
     chooseFolder: string;
+    loadCharacter: string;
     folderReady: string;
   };
   builder: {
@@ -151,8 +156,12 @@ export const UI_TEXT: Record<Locale, UiText> = {
     enemies: {
       title: "Enemies",
       add: "+ Add",
+      addFromPool: "+ Add From Pool",
+      monsterPool: "Monster Pool",
       defaultNamePrefix: "Enemy",
       nameAriaLabel: "Enemy name",
+      challengeRating: "CR",
+      speed: "Speed",
       initiative: "Initiative",
       armorClass: "Armor Class",
       hpCurrent: "HP Current",
@@ -270,6 +279,7 @@ export const UI_TEXT: Record<Locale, UiText> = {
       inventory: "Inventory",
       savedInSession: "Saved in session",
       chooseFolder: "Choose Character Folder",
+      loadCharacter: "Load Character",
       folderReady: "Folder ready"
     },
     builder: {
@@ -352,8 +362,12 @@ export const UI_TEXT: Record<Locale, UiText> = {
     enemies: {
       title: "Nemici",
       add: "+ Aggiungi",
+      addFromPool: "+ Aggiungi dal Pool",
+      monsterPool: "Pool Mostri",
       defaultNamePrefix: "Nemico",
       nameAriaLabel: "Nome nemico",
+      challengeRating: "GS",
+      speed: "Velocita",
       initiative: "Iniziativa",
       armorClass: "Classe Armatura",
       hpCurrent: "PF Correnti",
@@ -471,6 +485,7 @@ export const UI_TEXT: Record<Locale, UiText> = {
       inventory: "Inventario",
       savedInSession: "Salvato nella sessione",
       chooseFolder: "Scegli Cartella Personaggi",
+      loadCharacter: "Carica Personaggio",
       folderReady: "Cartella pronta"
     },
     builder: {

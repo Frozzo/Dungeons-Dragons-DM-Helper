@@ -1,51 +1,51 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-18T00:48:54.995Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
-    "classId": "warlock",
+    "id": "char-e72aq2px",
+    "name": "bbbbbbbbbbbb",
+    "raceId": "dragonborn",
+    "classId": "sorcerer",
     "backgroundId": "acolyte",
     "alignmentId": "lawfulGood",
     "level": 1,
-    "subclassId": "fiend",
-    "subclassName": "Il Demone",
+    "subclassId": "draconic",
+    "subclassName": "Discendenza Draconica",
     "size": "Media",
     "speed": 30,
-    "armorClass": 10,
+    "armorClass": 11,
     "hpCurrent": 8,
     "hpMax": 8,
-    "hitDie": "d8",
+    "hitDie": "d6",
     "proficiencyBonus": 2,
-    "armorSlot": "none",
+    "armorSlot": "light",
     "hasShield": false,
     "primaryWeapon": "",
     "secondaryWeapon": "",
     "inventoryNotes": "",
     "abilityScores": {
-      "str": 10,
+      "str": 14,
       "dex": 10,
-      "con": 10,
-      "int": 10,
+      "con": 14,
+      "int": 9,
       "wis": 10,
-      "cha": 10
+      "cha": 14
     },
     "abilityModifiers": {
-      "str": 0,
+      "str": 2,
       "dex": 0,
-      "con": 0,
-      "int": 0,
+      "con": 2,
+      "int": -1,
       "wis": 0,
-      "cha": 0
+      "cha": 2
     },
     "savingThrows": [
-      "Saggezza",
+      "Costituzione",
       "Carisma"
     ],
     "classSkillChoices": [
       "Intimidire",
-      "Indagare"
+      "Persuasione"
     ],
     "backgroundSkills": [
       "Intuizione",
@@ -55,40 +55,38 @@
       "Intuizione",
       "Religione",
       "Intimidire",
-      "Indagare"
+      "Persuasione"
     ],
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Draconico",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
-      "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Ascendenza draconica",
+      "Soffio",
+      "Resistenza ai danni"
     ],
     "classTraits": [
-      "Patrono ultraterreno",
-      "Magia del patto"
+      "Lancio di incantesimi",
+      "Origine stregonesca"
     ],
     "subclassTraits": [
-      "Dark One's Blessing"
+      "Dragon Ancestor",
+      "Draconic Resilience"
     ],
     "backgroundFeature": "Rifugio dei Fedeli",
     "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
+      "Fire Bolt"
     ],
     "spells": [
-      "Hex",
-      "Hellish Rebuke",
-      "Burning Hands",
-      "Command"
+      "Shield",
+      "Magic Missile"
     ],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-18T00:48:53.628Z",
+    "updatedAt": "2026-04-18T00:48:53.628Z"
   }
 }

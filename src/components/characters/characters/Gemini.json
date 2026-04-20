@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "savedAt": "2026-04-20T15:03:30.647Z",
+  "character": {
+    "id": "char-w9evzbas",
+    "name": "Gemini",
+    "raceId": "halfling",
+    "subraceId": "lightfoot-halfling",
+    "classId": "rogue",
+    "backgroundId": "criminal",
+    "alignmentId": "chaoticGood",
+    "level": 1,
+    "subclassId": "assassin",
+    "subclassName": "Assassino",
+    "size": "Piccola",
+    "speed": 25,
+    "armorClass": 12,
+    "hpCurrent": 10,
+    "hpMax": 10,
+    "hitDie": "d8",
+    "proficiencyBonus": 2,
+    "armorSlot": "none",
+    "hasShield": false,
+    "primaryWeapon": "Pugnale 1d6 tagliente",
+    "secondaryWeapon": "balestra leggera",
+    "inventoryNotes": "5x frecce\n2x attrezzi per scassinare",
+    "abilityScores": {
+      "str": 8,
+      "dex": 15,
+      "con": 14,
+      "int": 12,
+      "wis": 12,
+      "cha": 11
+    },
+    "abilityModifiers": {
+      "str": -1,
+      "dex": 2,
+      "con": 2,
+      "int": 1,
+      "wis": 1,
+      "cha": 0
+    },
+    "savingThrows": [
+      "Destrezza",
+      "Intelligenza"
+    ],
+    "classSkillChoices": [
+      "Furtivita",
+      "Rapidita di Mano",
+      "Persuasione",
+      "Intuizione"
+    ],
+    "backgroundSkills": [
+      "Inganno",
+      "Furtivita"
+    ],
+    "skillProficiencies": [
+      "Inganno",
+      "Furtivita",
+      "Rapidita di Mano",
+      "Persuasione",
+      "Intuizione"
+    ],
+    "tools": [
+      "Attrezzi da scasso"
+    ],
+    "languages": [
+      "Comune",
+      "Halfling"
+    ],
+    "customLanguages": [],
+    "raceTraits": [
+      "Fortunato",
+      "Coraggioso",
+      "Agilita halfling",
+      "Naturalmente furtivo"
+    ],
+    "classTraits": [
+      "Expertise",
+      "Attacco furtivo",
+      "Gergo dei ladri"
+    ],
+    "subclassTraits": [],
+    "backgroundFeature": "Contatto Criminale",
+    "cantrips": [],
+    "spells": [],
+    "notes": "",
+    "createdAt": "2026-04-20T15:03:30.633Z",
+    "updatedAt": "2026-04-20T15:03:30.633Z"
+  }
+}

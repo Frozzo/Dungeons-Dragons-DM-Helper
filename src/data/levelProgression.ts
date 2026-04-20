@@ -29,16 +29,16 @@ const CLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
   cleric: [
     { level: 1, traits: ["Spellcasting", "Divine Domain"] },
     { level: 2, traits: ["Channel Divinity", "Turn Undead"] },
-    { level: 3, traits: ["Destroy Undead"] },
+    { level: 3, traits: ["2nd-Level Spells"] },
     { level: 4, traits: ["Ability Score Improvement"] },
-    { level: 5, traits: ["Destroy Undead (CR 1/2)"] }
+    { level: 5, traits: ["Destroy Undead (CR 1/2)", "3rd-Level Spells"] }
   ],
   druid: [
     { level: 1, traits: ["Druidic", "Spellcasting"] },
     { level: 2, traits: ["Wild Shape", "Druid Circle"] },
-    { level: 3, traits: ["Primal Strike"] },
-    { level: 4, traits: ["Ability Score Improvement"] },
-    { level: 5, traits: ["Circle Improvement"] }
+    { level: 3, traits: ["2nd-Level Spells"] },
+    { level: 4, traits: ["Ability Score Improvement", "Wild Shape Improvement"] },
+    { level: 5, traits: ["3rd-Level Spells"] }
   ],
   fighter: [
     { level: 1, traits: ["Fighting Style", "Second Wind"] },
@@ -50,7 +50,7 @@ const CLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
   monk: [
     { level: 1, traits: ["Martial Arts", "Unarmored Defense"] },
     { level: 2, traits: ["Ki", "Unarmored Movement"] },
-    { level: 3, traits: ["Monastic Tradition"] },
+    { level: 3, traits: ["Monastic Tradition", "Deflect Missiles"] },
     { level: 4, traits: ["Slow Fall", "Ability Score Improvement"] },
     { level: 5, traits: ["Extra Attack", "Stunning Strike"] }
   ],
@@ -64,7 +64,7 @@ const CLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
   ranger: [
     { level: 1, traits: ["Favored Enemy", "Natural Explorer"] },
     { level: 2, traits: ["Spellcasting", "Fighting Style"] },
-    { level: 3, traits: ["Primeval Awareness", "Ranger Archetype"] },
+    { level: 3, traits: ["Ranger Archetype", "Primeval Awareness"] },
     { level: 4, traits: ["Ability Score Improvement"] },
     { level: 5, traits: ["Extra Attack"] }
   ],
@@ -100,20 +100,16 @@ const CLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
 
 const SUBCLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
   berserker: [
-    { level: 3, traits: ["Frenzy"] },
-    { level: 6, traits: ["Mindless Rage"] }
+    { level: 3, traits: ["Frenzy"] }
   ],
   "totem-warrior": [
-    { level: 3, traits: ["Spirit Seeker", "Totem Spirit"] },
-    { level: 6, traits: ["Aspect of the Beast"] }
+    { level: 3, traits: ["Spirit Seeker", "Totem Spirit"] }
   ],
   "college-lore": [
-    { level: 3, traits: ["Bonus Proficiencies", "Cutting Words"] },
-    { level: 6, traits: ["Additional Magical Secrets"] }
+    { level: 3, traits: ["Bonus Proficiencies", "Cutting Words"] }
   ],
   "college-valor": [
-    { level: 3, traits: ["Bonus Proficiencies", "Combat Inspiration"] },
-    { level: 6, traits: ["Extra Attack"] }
+    { level: 3, traits: ["Bonus Proficiencies", "Combat Inspiration"] }
   ],
   "life-domain": [
     { level: 1, traits: ["Disciple of Life"] },
@@ -124,76 +120,58 @@ const SUBCLASS_PROGRESSIONS: Record<string, ProgressionEntry[]> = {
     { level: 2, traits: ["Channel Divinity: Radiance of the Dawn"] }
   ],
   "moon-circle": [
-    { level: 2, traits: ["Combat Wild Shape", "Circle Forms"] },
-    { level: 6, traits: ["Primal Strike"] }
+    { level: 2, traits: ["Combat Wild Shape", "Circle Forms"] }
   ],
   "land-circle": [
-    { level: 2, traits: ["Bonus Cantrip", "Natural Recovery"] },
-    { level: 6, traits: ["Land's Stride"] }
+    { level: 2, traits: ["Bonus Cantrip", "Natural Recovery"] }
   ],
   champion: [
-    { level: 3, traits: ["Improved Critical"] },
-    { level: 7, traits: ["Remarkable Athlete"] }
+    { level: 3, traits: ["Improved Critical"] }
   ],
   "battle-master": [
-    { level: 3, traits: ["Combat Superiority", "Student of War"] },
-    { level: 7, traits: ["Know Your Enemy"] }
+    { level: 3, traits: ["Combat Superiority", "Student of War"] }
   ],
   "open-hand": [
-    { level: 3, traits: ["Open Hand Technique"] },
-    { level: 6, traits: ["Wholeness of Body"] }
+    { level: 3, traits: ["Open Hand Technique"] }
   ],
   shadow: [
-    { level: 3, traits: ["Shadow Arts"] },
-    { level: 6, traits: ["Shadow Step"] }
+    { level: 3, traits: ["Shadow Arts"] }
   ],
   devotion: [
-    { level: 3, traits: ["Sacred Weapon", "Turn the Unholy"] },
-    { level: 7, traits: ["Aura of Devotion"] }
+    { level: 3, traits: ["Sacred Weapon", "Turn the Unholy"] }
   ],
   vengeance: [
-    { level: 3, traits: ["Abjure Enemy", "Vow of Enmity"] },
-    { level: 7, traits: ["Relentless Avenger"] }
+    { level: 3, traits: ["Abjure Enemy", "Vow of Enmity"] }
   ],
   hunter: [
-    { level: 3, traits: ["Hunter's Prey", "Defensive Tactics"] },
-    { level: 7, traits: ["Multiattack"] }
+    { level: 3, traits: ["Hunter's Prey"] }
   ],
   "beast-master": [
-    { level: 3, traits: ["Ranger's Companion", "Exceptional Training"] },
-    { level: 7, traits: ["Bestial Fury"] }
+    { level: 3, traits: ["Ranger's Companion"] }
   ],
   thief: [
-    { level: 3, traits: ["Fast Hands", "Second-Story Work"] },
-    { level: 9, traits: ["Supreme Sneak"] }
+    { level: 3, traits: ["Fast Hands", "Second-Story Work"] }
   ],
   assassin: [
-    { level: 3, traits: ["Assassinate", "Infiltration Expertise"] },
-    { level: 9, traits: ["Impostor"] }
+    { level: 3, traits: ["Assassinate", "Infiltration Expertise"] }
   ],
   draconic: [
-    { level: 1, traits: ["Dragon Ancestor", "Draconic Resilience"] },
-    { level: 6, traits: ["Elemental Affinity"] }
+    { level: 1, traits: ["Dragon Ancestor", "Draconic Resilience"] }
   ],
   "wild-magic": [
-    { level: 1, traits: ["Wild Magic Surge", "Tides of Chaos"] },
-    { level: 6, traits: ["Bend Luck"] }
+    { level: 1, traits: ["Wild Magic Surge", "Tides of Chaos"] }
   ],
   fiend: [
-    { level: 1, traits: ["Dark One's Blessing"] },
-    { level: 6, traits: ["Dark One's Own Luck"] }
+    { level: 1, traits: ["Dark One's Blessing"] }
   ],
   "great-old-one": [
-    { level: 1, traits: ["Awakened Mind"] },
-    { level: 6, traits: ["Entropic Ward"] }
+    { level: 1, traits: ["Awakened Mind"] }
   ],
   evocation: [
-    { level: 2, traits: ["Sculpt Spells"] },
-    { level: 6, traits: ["Potent Cantrip"] }
+    { level: 2, traits: ["Sculpt Spells"] }
   ],
   illusion: [
-    { level: 2, traits: ["Improved Minor Illusion"] },
-    { level: 6, traits: ["Malleable Illusions"] }
+    { level: 2, traits: ["Improved Minor Illusion"] }
   ]
 };
 

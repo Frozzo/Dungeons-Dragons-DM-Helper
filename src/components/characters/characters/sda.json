@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "savedAt": "2026-04-18T14:06:15.665Z",
+  "savedAt": "2026-04-18T00:52:49.412Z",
   "character": {
-    "id": "char-79lmntij",
-    "name": "frozzo",
-    "raceId": "half-orc",
+    "id": "char-xeuwfh5v",
+    "name": "sda",
+    "raceId": "tiefling",
     "classId": "warlock",
     "backgroundId": "acolyte",
     "alignmentId": "lawfulGood",
@@ -14,8 +14,8 @@
     "size": "Media",
     "speed": 30,
     "armorClass": 10,
-    "hpCurrent": 8,
-    "hpMax": 8,
+    "hpCurrent": 10,
+    "hpMax": 10,
     "hitDie": "d8",
     "proficiencyBonus": 2,
     "armorSlot": "none",
@@ -24,20 +24,20 @@
     "secondaryWeapon": "",
     "inventoryNotes": "",
     "abilityScores": {
-      "str": 10,
+      "str": 14,
       "dex": 10,
-      "con": 10,
+      "con": 14,
       "int": 10,
-      "wis": 10,
-      "cha": 10
+      "wis": 11,
+      "cha": 12
     },
     "abilityModifiers": {
-      "str": 0,
+      "str": 2,
       "dex": 0,
-      "con": 0,
+      "con": 2,
       "int": 0,
       "wis": 0,
-      "cha": 0
+      "cha": 1
     },
     "savingThrows": [
       "Saggezza",
@@ -60,14 +60,14 @@
     "tools": [],
     "languages": [
       "Comune",
-      "Orchesco",
+      "Infernale",
       "Due a scelta"
     ],
     "customLanguages": [],
     "raceTraits": [
       "Scurovisione",
-      "Tenacia implacabile",
-      "Attacchi feroci"
+      "Resistenza infernale",
+      "Retaggio infernale"
     ],
     "classTraits": [
       "Patrono ultraterreno",
@@ -78,17 +78,15 @@
     ],
     "backgroundFeature": "Rifugio dei Fedeli",
     "cantrips": [
-      "Chill Touch",
-      "Eldritch Blast"
+      "Eldritch Blast",
+      "Mage Hand"
     ],
     "spells": [
-      "Hex",
-      "Hellish Rebuke",
-      "Burning Hands",
-      "Command"
+      "Armor of Agathys",
+      "Hellish Rebuke"
     ],
     "notes": "",
-    "createdAt": "2026-04-18T14:06:15.654Z",
-    "updatedAt": "2026-04-18T14:06:15.654Z"
+    "createdAt": "2026-04-18T00:52:49.401Z",
+    "updatedAt": "2026-04-18T00:52:49.401Z"
   }
 }
